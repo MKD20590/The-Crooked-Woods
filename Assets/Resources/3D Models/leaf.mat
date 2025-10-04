@@ -49,9 +49,9 @@ Material:
     - _height: 27.58
     - _speedA: 0.08
     - _speedB: 0.1
-    - _strength: 50
+    - _strength: 0.7
     m_Colors:
-    - _direction: {r: 10, g: 10, b: 0, a: 0}
+    - _direction: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &4932220513875232412
