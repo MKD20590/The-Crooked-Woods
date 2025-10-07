@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
         movement = (cam.transform.forward * direction.y) + (cam.transform.right * direction.x);
         movement.y = 0f;
         movement.Normalize();
+        movement = Vector3.ProjectOnPlane(movement, hit.normal).normalized;
 
         if (isSprinting && stamina > 0)
         {
