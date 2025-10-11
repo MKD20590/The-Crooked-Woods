@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class NpcMovements : MonoBehaviour
 {
     public float speed = 2.0f;
-    public float minDistance = 1f;
+    public float minDistanceStopping = 1f;
 
     public NavMeshSurface navMeshSurface;
     public NavMeshAgent navMeshAgent;
@@ -13,11 +13,6 @@ public class NpcMovements : MonoBehaviour
     public Transform target;
 
     public bool canMove = true;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
     public void UpdateNavMesh()
     {
         navMeshSurface.BuildNavMesh();
@@ -25,7 +20,7 @@ public class NpcMovements : MonoBehaviour
     public void MoveToTarget()
     {
         navMeshAgent.speed = speed;
-        navMeshAgent.stoppingDistance = minDistance;
+        navMeshAgent.stoppingDistance = minDistanceStopping;
         navMeshAgent.SetDestination(target.position);
     }
 }

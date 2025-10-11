@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,8 +7,11 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private List<NpcChildren> rescuedChildren;
+    [SerializeField] private NpcChildren companionChild;
     [SerializeField] private float hunger = 100f;
     [SerializeField] private float stamina = 50f;
+
     [SerializeField] private AudioClip footstepClip_grass;
     [SerializeField] private AudioClip footstepClip_path;
     [SerializeField] private AudioSource footstepAudioSource;
@@ -20,16 +24,24 @@ public class Player : MonoBehaviour
     Rigidbody rb;
     [SerializeField] private Vector3 movement = Vector3.zero;
     [SerializeField] private Vector2 direction = Vector2.zero;
-    [SerializeField] private float normalSpeed = 5f;
-    [SerializeField] private float sprintSpeed = 10f;
     [SerializeField] private float currentSpeed = 5f;
+    [SerializeField] private float normalSpeed = 5f;
+
+    [SerializeField] private float sprintSpeed = 10f;
     [SerializeField] private bool isSprinting = false;
+
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private bool isJumped = false;
-    Camera cam;
+
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private bool isGrounded = false;
-    RaycastHit hit;
+    RaycastHit groundHit;
+
+    [SerializeField] private LayerMask interactableLayer;
+    [SerializeField] private bool canInteract = false;
+    RaycastHit interactHit;
+
+    Camera cam;
     float camAmplitudeGain;
     float camFrequencyGain;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -43,14 +55,21 @@ public class Player : MonoBehaviour
     void Update()
     {
         //grounding check
-        Ray ray = new Ray(transform.position, -transform.up);
-        isGrounded = Physics.Raycast(ray, out hit, 1.05f, groundLayer);
+        Ray rayGround = new Ray(transform.position, -transform.up);
+        isGrounded = Physics.Raycast(rayGround, out groundHit, 1.05f, groundLayer);
+
+        //raycast for interactable object
+        Ray rayInteractable = new Ray(cam.transform.forward, transform.forward);
+        canInteract = Physics.Raycast(rayInteractable, out interactHit, 3f, interactableLayer);
+
+        //hunger depleting
+        hunger -= isSprinting ? Time.deltaTime * 2.5f : Time.deltaTime;
 
         //movement
         movement = (cam.transform.forward * direction.y) + (cam.transform.right * direction.x);
         movement.y = 0f;
         movement.Normalize();
-        movement = Vector3.ProjectOnPlane(movement, hit.normal).normalized;
+        movement = Vector3.ProjectOnPlane(movement, groundHit.normal).normalized;
 
         if (isSprinting && stamina > 0)
         {
@@ -181,11 +200,29 @@ public class Player : MonoBehaviour
     {
         if (gameObject.name == "Player")
         {
-            if (ctx.phase == InputActionPhase.Performed)
+            if (ctx.phase == InputActionPhase.Performed && canInteract)
             {
                 Debug.Log("interact");
+                //food
+                if(interactHit.collider.gameObject.tag == "Collectibles")
+                {
+                    Apple apple = null;
+                    interactHit.collider.TryGetComponent<Apple>(out apple);
+                    if(apple != null) apple.Collected();
+                }
+                //compass
+                else if (interactHit.collider.gameObject.tag == "Compass")
+                {
+                    Compass compass = null;
+                    interactHit.collider.TryGetComponent<Compass>(out compass);
+                    if (compass != null) compass.Collected();
+                }
             }
         }
+    }
+    public void GetCompass()
+    {
+
     }
     public float GetHunger()
     {
