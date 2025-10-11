@@ -46,15 +46,16 @@ Currently in development phase
 
 ```
 ├── Unfound                           # Contains everything needed for Unfound to work.
-   ├── Assets                         # Contains every assets that are integrated with unity to create the game, like the scripts and the art.
-      ├── 3D models         # Contains the materials and shader graphs needed for the 3D models in the game.
-      ├── Animations                  # Contains every animation clip and animator controller that is used for the game.
-      ├── Audios                      # Contains every sound used for the game like music and sound effects.
-      ├── Fonts                       # Contains every fonts used to the display the text in the game.
-      ├── Images                      # Contains all the game art like the sprites used for the game.
-      ├── Prefabs                     # Contains every reusable game object that will be instantiated in the game scene.
-      ├── Scripts                     # Contains all scripts needed to make the game get goings like PlayerMovement scripts.
-      ├── Scenes                      # Contains all scenes that exist in the game for it to interconnected with each other like MainMenu, Gameplay, etc
+   ├── Assets                         # Contains every assets that are integrated with unity to create the game.
+      ├── Resources                   # Contains every game assets that are integrated with unity to create the game, like the scripts and the art.
+         ├── 3D models                # Contains the materials and shader graphs needed for the 3D models in the game.
+         ├── Animations               # Contains every animation clip and animator controller that is used for the game.
+         ├── Audios                   # Contains every sound used for the game like music and sound effects.
+         ├── Fonts                    # Contains every fonts used to the display the text in the game.
+         ├── Images                   # Contains all the game art like the sprites used for the game.
+         ├── Prefabs                  # Contains every reusable game object that will be instantiated in the game scene.
+         ├── Scripts                  # Contains all scripts needed to make the game get goings like PlayerMovement scripts.
+         ├── Scenes                   # Contains all scenes that exist in the game for it to interconnected with each other like MainMenu, Gameplay, etc
 ```
       
 
