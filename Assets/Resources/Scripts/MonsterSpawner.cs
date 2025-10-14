@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject monsterPrefab;
-    [SerializeField] private GameObject currentMonster;
+    [SerializeField] private NpcMonster currentMonster;
     [SerializeField] private float minHunger = 20f;
     [SerializeField] private float minSpawnInterval = 5f;
     [SerializeField] private float maxSpawnInterval = 20f;
@@ -16,8 +15,9 @@ public class MonsterSpawner : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (player.GetHunger() < minHunger && currentMonster == null)
+        if (player.GetHunger() < minHunger && player.rescuedChildren.Count >= 1 && !currentMonster.isSpawned)
         {
+            currentMonster.isSpawned = true;
             StartCoroutine(Spawn());
         }
     }
@@ -29,12 +29,12 @@ public class MonsterSpawner : MonoBehaviour
         if(rand == 0)
         {
             Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(0f, 2f), Random.Range(-20f, 20f));
-            currentMonster = Instantiate(monsterPrefab, player.transform.position + posisi, Quaternion.identity);
+            currentMonster.transform.position =  (player.transform.position + posisi);
         }
         else
         {
             Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(-0f, -2f), Random.Range(-20f, 20f));
-            currentMonster = Instantiate(monsterPrefab, player.transform.position - posisi, Quaternion.identity);
+            currentMonster.transform.position = (player.transform.position - posisi);
         }
     }
 }

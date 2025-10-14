@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ChildrenManager : MonoBehaviour
 {
@@ -17,7 +18,12 @@ public class ChildrenManager : MonoBehaviour
         {
             int idx = Random.Range(0, index.Count);
             children[index[idx]].transform.position = pos.position;
+            children[index[idx]].GetComponent<NavMeshAgent>().enabled = true;
             index.RemoveAt(idx);
+            if(index.Count <= 0)
+            {
+                break;
+            }
         }
     }
 

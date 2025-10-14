@@ -7,8 +7,11 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private List<NpcChildren> rescuedChildren;
+    [SerializeField] private int maxChildren = 5;
+
+    public List<NpcChildren> rescuedChildren;
     [SerializeField] private NpcChildren companionChild;
+
     [SerializeField] private float hunger = 100f;
     [SerializeField] private float stamina = 50f;
 
@@ -55,15 +58,21 @@ public class Player : MonoBehaviour
     void Update()
     {
         //grounding check
-        Ray rayGround = new Ray(transform.position, -transform.up);
-        isGrounded = Physics.Raycast(rayGround, out groundHit, 1.05f, groundLayer);
+        Ray rayGround1 = new Ray(new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f), -transform.up);
+        Ray rayGround2 = new Ray(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), -transform.up);
+        Ray rayGround3 = new Ray(new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z), -transform.up);
+        Ray rayGround4 = new Ray(new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z), -transform.up);
+        isGrounded = Physics.Raycast(rayGround1, out groundHit, 1.1f, groundLayer) ||
+            Physics.Raycast(rayGround2, out groundHit, 1.1f, groundLayer) ||
+            Physics.Raycast(rayGround3, out groundHit, 1.1f, groundLayer) ||
+            Physics.Raycast(rayGround4, out groundHit, 1.1f, groundLayer);
 
         //raycast for interactable object
-        Ray rayInteractable = new Ray(cam.transform.forward, transform.forward);
-        canInteract = Physics.Raycast(rayInteractable, out interactHit, 3f, interactableLayer);
+        Ray rayInteractable = new Ray(cam.transform.position, cam.transform.forward);
+        canInteract = Physics.Raycast(rayInteractable, out interactHit, 2.5f, interactableLayer);
 
         //hunger depleting
-        hunger -= isSprinting ? Time.deltaTime * 2.5f : Time.deltaTime;
+        hunger -= isSprinting ? Time.deltaTime * 1.5f : Time.deltaTime;
 
         //movement
         movement = (cam.transform.forward * direction.y) + (cam.transform.right * direction.x);
@@ -79,7 +88,7 @@ public class Player : MonoBehaviour
         {
             stamina += Time.deltaTime * 3f;
         }
-        currentSpeed = isSprinting && stamina > 0 ? sprintSpeed : normalSpeed;
+        currentSpeed = isSprinting && hunger > 0 && stamina > 0 ? sprintSpeed : normalSpeed;
         if (isJumped && isGrounded)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
@@ -87,6 +96,10 @@ public class Player : MonoBehaviour
             jumpAudioSource.Stop();
             jumpAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
             jumpAudioSource.Play();
+        }
+        else if(!isGrounded)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
         }
         else
         {
@@ -204,11 +217,16 @@ public class Player : MonoBehaviour
             {
                 Debug.Log("interact");
                 //food
-                if(interactHit.collider.gameObject.tag == "Collectibles")
+                if(interactHit.collider.gameObject.tag == "Food")
                 {
                     Apple apple = null;
                     interactHit.collider.TryGetComponent<Apple>(out apple);
                     if(apple != null) apple.Collected();
+                }
+                //collectibles
+                else if (interactHit.collider.gameObject.tag == "Collectibles")
+                {
+                    //for future use
                 }
                 //compass
                 else if (interactHit.collider.gameObject.tag == "Compass")
@@ -228,8 +246,29 @@ public class Player : MonoBehaviour
     {
         return hunger;
     }
+    public void GetCaught()
+    {
+        if(companionChild != null)
+        {
+            companionChild.GetEaten();
+            companionChild = null;
+        }
+        else
+        {
+            int randomIdx = Random.Range(0, rescuedChildren.Count);
+        }
+        AddHunger(100f);
+    }
     public void AddHunger(float value)
     {
         hunger += value;
+        if(hunger > 100f)
+        {
+            hunger = 100f;
+        }
+        else if(hunger < 0f)
+        {
+            hunger = 0f;
+        }
     }
 }
