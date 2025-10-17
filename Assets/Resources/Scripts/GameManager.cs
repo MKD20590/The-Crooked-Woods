@@ -1,5 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,16 +11,51 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Animator blackScreen;
     [SerializeField] private Animator jumpscareScreen;
     public bool isWin = false;
+    [SerializeField] private GameObject pausePanel;
+    [SerializeField] private AudioMixer mixer;
+    [SerializeField] private Slider bgmSlider;
+    [SerializeField] private Slider sfxSlider;
+    LoadingManager loadingManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1;
+        loadingManager = LoadingManager.Instance;
+        if (!PlayerPrefs.HasKey("bgm") || !PlayerPrefs.HasKey("sfx"))
+        {
+            PlayerPrefs.SetFloat("bgm", 1f);
+            PlayerPrefs.SetFloat("sfx", 1f);
+            bgmSlider.value = 1;
+            sfxSlider.value = 1;
+            mixer.SetFloat("bgm", PlayerPrefs.GetFloat("bgm"));
+            mixer.SetFloat("sfx", PlayerPrefs.GetFloat("sfx"));
+        }
+        else
+        {
+            bgmSlider.value = PlayerPrefs.GetFloat("bgm");
+            sfxSlider.value = PlayerPrefs.GetFloat("sfx");
+            mixer.SetFloat("bgm", PlayerPrefs.GetFloat("bgm"));
+            mixer.SetFloat("sfx", PlayerPrefs.GetFloat("sfx"));
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //audio
+        if (PlayerPrefs.HasKey("bgm") && PlayerPrefs.HasKey("sfx"))
+        {
+            PlayerPrefs.SetFloat("bgm", bgmSlider.value);
+            PlayerPrefs.SetFloat("sfx", sfxSlider.value);
+            mixer.SetFloat("bgm", Mathf.Log10(PlayerPrefs.GetFloat("bgm")) * 20);
+            mixer.SetFloat("sfx", Mathf.Log10(PlayerPrefs.GetFloat("sfx")) * 20);
+        }
+        else
+        {
+            mixer.SetFloat("bgm", Mathf.Log10(bgmSlider.value) * 20);
+            mixer.SetFloat("sfx", Mathf.Log10(sfxSlider.value) * 20);
+        }
     }
     public IEnumerator MonsterEats()
     {
@@ -30,6 +68,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         isPaused = !isPaused;
+        pausePanel.SetActive(isPaused);
         if (isPaused)
         {
             Time.timeScale = 0f;
@@ -47,5 +86,9 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         blackScreen.SetBool("in", true);
+    }
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("MapTest");
     }
 }

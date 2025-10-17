@@ -8,6 +8,7 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private GameObject helicopter;
     [SerializeField] private GameObject cursorGrab;
 
     [SerializeField] private int maxChildren = 5;
@@ -74,11 +75,23 @@ public class Player : MonoBehaviour
         {
             mat.SetTexture("_Texture2D", journal_childrenNotFound[journal_childrenMaterial.IndexOf(mat)]);
         }
+        hungerBar.maxValue = hunger;
+        staminaBar.maxValue = stamina;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //bar
+        hungerBar.value = hunger;
+        staminaBar.value = stamina;
+
+        //winning condition
+        if (rescuedChildren.Count >= maxChildren && helicopter != null)
+        {
+            helicopter.SetActive(true);
+        }
+
         //grounding check
         Ray rayGround1 = new Ray(new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f), -transform.up);
         Ray rayGround2 = new Ray(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), -transform.up);
