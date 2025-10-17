@@ -10814,7 +10814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 786f18b32edd0c8488b399ca05906879, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helicopter: {fileID: 0}
+  helicopter: {fileID: 919132149203292121}
   cursorGrab: {fileID: 227154381}
   maxChildren: 5
   rescuedChildren: []
