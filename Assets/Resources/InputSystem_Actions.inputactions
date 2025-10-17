@@ -86,6 +86,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Cycle Inventory",
+                    "type": "Button",
+                    "id": "d2096c03-1504-4b4b-91e5-e30ca85d2d0b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CallForChildren",
+                    "type": "Button",
+                    "id": "2bf6e43b-1420-42aa-a4b9-9cdebcddb93b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -471,6 +489,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35d27884-3cd1-4e0c-884e-16b83c29eaaf",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Cycle Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "af4db8e3-0641-43af-80d1-ecb421c284ba",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "CallForChildren",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

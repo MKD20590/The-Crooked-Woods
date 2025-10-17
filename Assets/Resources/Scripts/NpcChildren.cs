@@ -4,6 +4,7 @@ using UnityEngine.AI;
 
 public class NpcChildren : NpcMovements
 {
+    public int childrenIdx = 0;
     [SerializeField] private AudioSource scream;
     [SerializeField] private float minDistance = 3f;
     Player player;
@@ -23,24 +24,16 @@ public class NpcChildren : NpcMovements
         if(Vector3.Distance(transform.position, player.transform.position) <= minDistance && isLost)
         {
             isLost = false;
-            if(!player.rescuedChildren.Contains(this))
-            {
-                player.rescuedChildren.Add(this);
-            }
+            player.RescueChild(this);
             MoveToTarget();
         }
-        else
-        {
-            isLost = true;
-            if (player.rescuedChildren.Contains(this))
-            {
-                player.rescuedChildren.Remove(this);
-            }
-        }
+    }
+    public void CallOut()
+    {
+        scream.Play();
     }
     public void GetEaten()
     {
-        scream.Play();
         Destroy(gameObject);
     }
 }

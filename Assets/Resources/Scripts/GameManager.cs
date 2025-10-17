@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
     bool isPaused = false;
     public bool isMonsterEating = false;
     [SerializeField] private Animator blackScreen;
+    [SerializeField] private Animator jumpscareScreen;
+    public bool isWin = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,7 +22,9 @@ public class GameManager : MonoBehaviour
     public IEnumerator MonsterEats()
     {
         isMonsterEating = true;
-        yield return new WaitForSecondsRealtime(7f);
+        jumpscareScreen.SetBool("in", true);
+        yield return new WaitForSecondsRealtime(3f);
+        jumpscareScreen.SetBool("in", false);
         isMonsterEating = false;
     }
     public void PauseGame()
@@ -36,5 +40,12 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
+    public void Win()
+    {
+        isWin = true;
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        blackScreen.SetBool("in", true);
     }
 }

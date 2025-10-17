@@ -7,6 +7,7 @@ TagManager:
   - Food
   - Compass
   - Collectibles
+  - Win
   layers:
   - Default
   - TransparentFX

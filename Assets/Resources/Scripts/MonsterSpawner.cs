@@ -1,8 +1,12 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
 {
+    [SerializeField] private AudioSource monsterSpawn;
+    [SerializeField] private List<Transform> spawnPositions;
     [SerializeField] private NpcMonster currentMonster;
     [SerializeField] private float minHunger = 20f;
     [SerializeField] private float minSpawnInterval = 5f;
@@ -25,16 +29,21 @@ public class MonsterSpawner : MonoBehaviour
     public IEnumerator Spawn()
     {
         yield return new WaitForSeconds(Random.Range(minSpawnInterval,maxSpawnInterval));
-        int rand = Random.Range(0, 2);
-        if(rand == 0)
-        {
-            Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(0f, 2f), Random.Range(-20f, 20f));
-            currentMonster.transform.position =  (player.transform.position + posisi);
-        }
-        else
-        {
-            Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(-0f, -2f), Random.Range(-20f, 20f));
-            currentMonster.transform.position = (player.transform.position - posisi);
-        }
+        monsterSpawn.Play();
+        int randPos = Random.Range(0, spawnPositions.Count);
+        currentMonster.transform.position = spawnPositions[randPos].position;
+        currentMonster.isSpawned = true;
+        currentMonster.gameObject.SetActive(true);
+        /*        int rand = Random.Range(0, 2);
+                if (rand == 0)
+                {
+                    Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(0f, 2f), Random.Range(-20f, 20f));
+                    currentMonster.transform.position =  (player.transform.position + posisi);
+                }
+                else
+                {
+                    Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(-0f, -2f), Random.Range(-20f, 20f));
+                    currentMonster.transform.position = (player.transform.position - posisi);
+                }*/
     }
 }

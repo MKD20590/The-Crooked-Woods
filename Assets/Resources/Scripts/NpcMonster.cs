@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class NpcMonster : NpcMovements
 {
     public MonsterSpawner spawner;
-    [SerializeField] private float minDistanceCaught = 0.7f;
+    float minDistanceCaught = 0.2f;
     [SerializeField] private float minDistance = 30f;
     [SerializeField] private float minDuration = 10f;
     [SerializeField] private float maxDuration = 15f;
@@ -46,6 +46,7 @@ public class NpcMonster : NpcMovements
             else
             {
                 isSpawned = false;
+                gameObject.SetActive(false);
             }
         }
     }

@@ -3,22 +3,36 @@ using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private GameObject cursorGrab;
+
     [SerializeField] private int maxChildren = 5;
 
     public List<NpcChildren> rescuedChildren;
+    [SerializeField] private List<Material> journal_childrenMaterial;
+    [SerializeField] private List<Texture2D> journal_childrenNotFound;
+    [SerializeField] private List<Texture2D> journal_childrenFound;
+    [SerializeField] private List<GameObject> journal_childrenDead;
     [SerializeField] private NpcChildren companionChild;
 
     [SerializeField] private float hunger = 100f;
+    [SerializeField] private Slider hungerBar;
     [SerializeField] private float stamina = 50f;
+    [SerializeField] private Slider staminaBar;
 
     [SerializeField] private AudioClip footstepClip_grass;
     [SerializeField] private AudioClip footstepClip_path;
     [SerializeField] private AudioSource footstepAudioSource;
     [SerializeField] private AudioSource jumpAudioSource;
+
+    [SerializeField] private List<AudioClip> callVoices;
+    [SerializeField] private AudioSource callVoice;
+    bool canCallChildren = true;
+
     [Range(0f, 1f)]
     [SerializeField] private float footstepPitchInterval;
     [SerializeField] private float footstepInterval_walk = 0.5f;
@@ -47,11 +61,19 @@ public class Player : MonoBehaviour
     Camera cam;
     float camAmplitudeGain;
     float camFrequencyGain;
+
+    [SerializeField] private Animator anim;
+    GameManager gm;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        gm = FindFirstObjectByType<GameManager>();
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
+        foreach(Material mat in journal_childrenMaterial)
+        {
+            mat.SetTexture("_Texture2D", journal_childrenNotFound[journal_childrenMaterial.IndexOf(mat)]);
+        }
     }
 
     // Update is called once per frame
@@ -70,6 +92,7 @@ public class Player : MonoBehaviour
         //raycast for interactable object
         Ray rayInteractable = new Ray(cam.transform.position, cam.transform.forward);
         canInteract = Physics.Raycast(rayInteractable, out interactHit, 2.5f, interactableLayer);
+        cursorGrab.SetActive(canInteract);
 
         //hunger depleting
         hunger -= isSprinting ? Time.deltaTime * 1.5f : Time.deltaTime;
@@ -89,23 +112,26 @@ public class Player : MonoBehaviour
             stamina += Time.deltaTime * 3f;
         }
         currentSpeed = isSprinting && hunger > 0 && stamina > 0 ? sprintSpeed : normalSpeed;
-        if (isJumped && isGrounded)
+        if(!gm.isWin)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-            //play 1 time footstep sound when jump
-            jumpAudioSource.Stop();
-            jumpAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
-            jumpAudioSource.Play();
+            if (isJumped && isGrounded)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+                //play 1 time footstep sound when jump
+                jumpAudioSource.Stop();
+                jumpAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
+                jumpAudioSource.Play();
+            }
+            else if(!isGrounded)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector3(movement.x * currentSpeed, rb.linearVelocity.y, movement.z * currentSpeed);
+            }
+            CameraEffects();
         }
-        else if(!isGrounded)
-        {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
-        }
-        else
-        {
-            rb.linearVelocity = new Vector3(movement.x * currentSpeed, rb.linearVelocity.y, movement.z * currentSpeed);
-        }
-        CameraEffects();
     }
     void CameraEffects()
     {
@@ -238,6 +264,33 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public void CycleInventory(CallbackContext ctx)
+    {
+        if (gameObject.name == "Player")
+        {
+            if (ctx.phase == InputActionPhase.Performed)
+            {
+                Debug.Log("cycle inventory");
+                anim.SetTrigger("cycle");
+            }
+        }
+    }
+    public void CallChildren(CallbackContext ctx)
+    {
+        if (gameObject.name == "Player")
+        {
+            if (ctx.phase == InputActionPhase.Performed && canCallChildren)
+            {
+                callVoice.clip = callVoices[Random.Range(0, callVoices.Count)];
+                callVoice.Play();
+                Invoke("CallForChildren", 3.5f);
+            }
+        }
+    }
+    public void RescueChild(NpcChildren child)
+    {
+        journal_childrenMaterial[child.childrenIdx].SetTexture("_Texture2D", journal_childrenFound[child.childrenIdx]);
+    }
     public void GetCompass()
     {
 
@@ -256,8 +309,24 @@ public class Player : MonoBehaviour
         else
         {
             int randomIdx = Random.Range(0, rescuedChildren.Count);
+            rescuedChildren[randomIdx].GetEaten();
+            rescuedChildren.RemoveAt(randomIdx);
+            journal_childrenDead[randomIdx].SetActive(true);
+            maxChildren--;
         }
         AddHunger(100f);
+    }
+    public void CallForChildren()
+    {
+        foreach(NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
+        {
+            child.CallOut();
+        }
+        Invoke("ResetCall", 5f);
+    }
+    void ResetCall()
+    {
+        canCallChildren = true;
     }
     public void AddHunger(float value)
     {
@@ -269,6 +338,13 @@ public class Player : MonoBehaviour
         else if(hunger < 0f)
         {
             hunger = 0f;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Win")
+        {
+            gm.Win();
         }
     }
 }
