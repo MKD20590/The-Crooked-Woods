@@ -6675,11 +6675,11 @@ Terrain:
   m_Enabled: 1
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: 84d72b9322f236142807b4ff0dd6e558, type: 2}
-  m_TreeDistance: 5000
-  m_TreeBillboardDistance: 2000
+  m_TreeDistance: 100
+  m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
-  m_TreeMaximumFullLODCount: 10000
-  m_DetailObjectDistance: 1000
+  m_TreeMaximumFullLODCount: 30
+  m_DetailObjectDistance: 50
   m_DetailObjectDensity: 0.4
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 100
@@ -8181,11 +8181,11 @@ Terrain:
   m_Enabled: 1
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: 6823cbd2a51a27c42b36aa8ba5ff48a1, type: 2}
-  m_TreeDistance: 5000
-  m_TreeBillboardDistance: 2000
+  m_TreeDistance: 100
+  m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
-  m_TreeMaximumFullLODCount: 10000
-  m_DetailObjectDistance: 1000
+  m_TreeMaximumFullLODCount: 30
+  m_DetailObjectDistance: 50
   m_DetailObjectDensity: 0.4
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
@@ -8532,11 +8532,11 @@ Terrain:
   m_Enabled: 1
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: 283cdd60c1822084dac0f246e5acff0b, type: 2}
-  m_TreeDistance: 5000
-  m_TreeBillboardDistance: 2000
+  m_TreeDistance: 100
+  m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
-  m_TreeMaximumFullLODCount: 10000
-  m_DetailObjectDistance: 1000
+  m_TreeMaximumFullLODCount: 30
+  m_DetailObjectDistance: 50
   m_DetailObjectDensity: 0.4
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 100
@@ -11890,11 +11890,11 @@ Terrain:
   m_Enabled: 1
   serializedVersion: 6
   m_TerrainData: {fileID: 15600000, guid: da26fc517f710e54b801dcfb2bf060c2, type: 2}
-  m_TreeDistance: 5000
-  m_TreeBillboardDistance: 2000
+  m_TreeDistance: 100
+  m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
-  m_TreeMaximumFullLODCount: 10000
-  m_DetailObjectDistance: 1000
+  m_TreeMaximumFullLODCount: 30
+  m_DetailObjectDistance: 50
   m_DetailObjectDensity: 0.4
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
