@@ -46,7 +46,7 @@ Currently in development phase
 ## 📂Files description
 
 ```
-├── The Crooked Woods                 # Contains everything needed for Unfound to work.
+├── The Crooked Woods                 # Contains everything needed for The Crooked Woods to work.
    ├── Assets                         # Contains every assets that are integrated with unity to create the game.
       ├── Resources                   # Contains every game assets that are integrated with unity to create the game, like the scripts and the art.
          ├── 3D models                # Contains the materials and shader graphs needed for the 3D models in the game.
