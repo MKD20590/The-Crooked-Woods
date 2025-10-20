@@ -1,16 +1,17 @@
 <table>
   <tr>
     <td align="left" width="50%">
-      <img width="100%" alt="gif1" src="">
+      <img width="100%" alt="gif1" src="https://github.com/user-attachments/assets/8669fb3d-2b39-4706-91b6-f8c6e703add1">
     </td>
     <td align="right" width="50%">
-      <img width="100%" alt="gif2" src="">
+      <img width="100%" alt="gif2" src="https://github.com/user-attachments/assets/81fd778e-d521-4bfe-8935-0e4fa8d3ca92">
     </td>
   </tr>
 </table>
 
 <p align="center">
-  <img width="100%" alt="gif3" src="">
+  <img width="100%" alt="gif3" src="https://github.com/user-attachments/assets/e4354a41-127b-431d-b3a1-8142ce31f6af">
+
 </p>
 
 ##  📜Scripts and Features
@@ -39,13 +40,13 @@ Currently in development phase
 <br>
 
 ## 🔴About
-"Unfound" is a singleplayer horror game where the player takes the role of a volunteer sent to rescue five missing children in the woods. You can choose one child to be their companion and rescue the others while there is something lurking in the darkness. Your objective is simple, to find all the missing children that is hiding somewhere in the forest, and leave the forest before something gets you. I created all the scripts, here are some details about Unfound's development
+"The Crooked Woods" is a singleplayer horror game where the player takes the role of a volunteer sent to rescue five missing children in the woods. You can choose one child to be their companion and rescue the others while there is something lurking in the darkness. Your objective is simple, to find all the missing children that is hiding somewhere in the forest, and leave the forest before something gets you. I created all the scripts, here are some details about Unfound's development
 <br>
 
 ## 📂Files description
 
 ```
-├── Unfound                           # Contains everything needed for Unfound to work.
+├── The Crooked Woods                 # Contains everything needed for Unfound to work.
    ├── Assets                         # Contains every assets that are integrated with unity to create the game.
       ├── Resources                   # Contains every game assets that are integrated with unity to create the game, like the scripts and the art.
          ├── 3D models                # Contains the materials and shader graphs needed for the 3D models in the game.
@@ -69,7 +70,9 @@ The following controls are bound in-game, for gameplay and testing.
 | ----------------- | ----------------- |
 | W,A,S,D           | Standard movement |
 | Space             | Jump           |
-| E             | Interact           |
-| Escape             | Pause           |
+| E                 | Interact           |
+| Q                 | Open book / journal           |
+| F                 | Call children           |
+| Escape            | Pause           |
 
 <br>
