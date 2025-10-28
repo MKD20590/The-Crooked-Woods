@@ -137,10 +137,12 @@ public class Player : MonoBehaviour
                 jumpAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
                 jumpAudioSource.Play();
             }
-            else if (!isGrounded)
+            //jump mechanic 2
+/*            else if (!isGrounded)
             {
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
-            }
+            }*/
+            //jump mechanic 1
             else
             {
                 rb.linearVelocity = new Vector3(movement.x * currentSpeed, rb.linearVelocity.y, movement.z * currentSpeed);
@@ -276,6 +278,11 @@ public class Player : MonoBehaviour
                     interactHit.collider.TryGetComponent<Compass>(out compass);
                     if (compass != null) compass.Collected();
                 }
+                //tent
+                else if (interactHit.collider.gameObject.tag == "Tent")
+                {
+                    //for children hiding mechanic
+                }
             }
         }
     }
@@ -305,6 +312,7 @@ public class Player : MonoBehaviour
     public void RescueChild(NpcChildren child)
     {
         journal_childrenMaterial[child.childrenIdx].SetTexture("_Texture2D", journal_childrenFound[child.childrenIdx]);
+        rescuedChildren.Add(child);
     }
     public void GetCompass()
     {
@@ -335,7 +343,7 @@ public class Player : MonoBehaviour
     {
         foreach (NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
         {
-            child.CallOut();
+            if(!rescuedChildren.Contains(child)) child.CallOut();
         }
         Invoke("ResetCall", 5f);
     }
