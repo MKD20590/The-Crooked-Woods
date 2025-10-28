@@ -37,6 +37,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _Texture2DAsset_2daccb03f5b248afb367dee9738b6f6b_Out_0_Texture2D:
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -56,6 +60,8 @@ Material:
     - _alpha_clip: -0.13
     - _time_multiplier: 1.19
     m_Colors:
+    - _BaseColor: {r: 0.27436808, g: 0.36095265, b: 0.3962264, a: 1}
     - _Color: {r: 0.043211076, g: 0.19245279, b: 0.14202498, a: 1}
+    - _RippleColor: {r: 0.07431113, g: 0.2679245, b: 0.15599176, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
