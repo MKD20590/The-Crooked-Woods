@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
         gm = FindFirstObjectByType<GameManager>();
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
-        foreach(Material mat in journal_childrenMaterial)
+        foreach (Material mat in journal_childrenMaterial)
         {
             mat.SetTexture("_Texture2D", journal_childrenNotFound[journal_childrenMaterial.IndexOf(mat)]);
         }
@@ -97,18 +97,18 @@ public class Player : MonoBehaviour
         Ray rayGround2 = new Ray(new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.5f), -transform.up);
         Ray rayGround3 = new Ray(new Vector3(transform.position.x + 0.5f, transform.position.y, transform.position.z), -transform.up);
         Ray rayGround4 = new Ray(new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z), -transform.up);
-        isGrounded = Physics.Raycast(rayGround1, out groundHit, 1.1f, groundLayer) ||
-            Physics.Raycast(rayGround2, out groundHit, 1.1f, groundLayer) ||
-            Physics.Raycast(rayGround3, out groundHit, 1.1f, groundLayer) ||
-            Physics.Raycast(rayGround4, out groundHit, 1.1f, groundLayer);
+        isGrounded = Physics.Raycast(rayGround1, out groundHit, 2.0f, groundLayer) ||
+            Physics.Raycast(rayGround2, out groundHit, 2.0f, groundLayer) ||
+            Physics.Raycast(rayGround3, out groundHit, 2.0f, groundLayer) ||
+            Physics.Raycast(rayGround4, out groundHit, 2.0f, groundLayer);
 
         //raycast for interactable object
         Ray rayInteractable = new Ray(cam.transform.position, cam.transform.forward);
-        canInteract = Physics.Raycast(rayInteractable, out interactHit, 2.5f, interactableLayer);
+        canInteract = Physics.Raycast(rayInteractable, out interactHit, 3.5f, interactableLayer);
         cursorGrab.SetActive(canInteract);
 
         //hunger depleting
-        hunger -= isSprinting ? Time.deltaTime * 1.5f : Time.deltaTime;
+        hunger -= isSprinting ? Time.deltaTime * 1.0f : Time.deltaTime;
 
         //movement
         movement = (cam.transform.forward * direction.y) + (cam.transform.right * direction.x);
@@ -116,16 +116,18 @@ public class Player : MonoBehaviour
         movement.Normalize();
         movement = Vector3.ProjectOnPlane(movement, groundHit.normal).normalized;
 
+        //stamina depleting
         if (isSprinting && stamina > 0)
         {
-            stamina -= Time.deltaTime * 5f;
+            stamina -= Time.deltaTime * 3f;
         }
-        else if(!isSprinting && stamina < 50f)
+        //stamina recharge
+        else if (!isSprinting && stamina < 50f)
         {
-            stamina += Time.deltaTime * 3f;
+            stamina += Time.deltaTime * 5f;
         }
         currentSpeed = isSprinting && hunger > 0 && stamina > 0 ? sprintSpeed : normalSpeed;
-        if(!gm.isWin)
+        if (!gm.isWin)
         {
             if (isJumped && isGrounded)
             {
@@ -135,7 +137,7 @@ public class Player : MonoBehaviour
                 jumpAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
                 jumpAudioSource.Play();
             }
-            else if(!isGrounded)
+            else if (!isGrounded)
             {
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y, rb.linearVelocity.z);
             }
@@ -204,12 +206,12 @@ public class Player : MonoBehaviour
     }
     IEnumerator FootstepSFX()
     {
-        while(true)
+        while (true)
         {
-            if(isGrounded)
+            if (isGrounded)
             {
                 //play footstep sound
-                footstepAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y-0.7f, transform.position.z);
+                footstepAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
                 footstepAudioSource.pitch = Random.Range(1f - footstepPitchInterval, 1f + footstepPitchInterval);
                 footstepAudioSource.Play();
             }
@@ -218,11 +220,11 @@ public class Player : MonoBehaviour
                 footstepAudioSource.Stop();
             }
             float delay = 0;
-            if(isGrounded && isSprinting && stamina <= 0 || isGrounded && !isSprinting)
+            if (isGrounded && isSprinting && stamina <= 0 || isGrounded && !isSprinting)
             {
                 delay = footstepInterval_walk;
             }
-            else if(isGrounded && isSprinting && stamina > 0)
+            else if (isGrounded && isSprinting && stamina > 0)
             {
                 delay = footstepInterval_run;
             }
@@ -230,7 +232,7 @@ public class Player : MonoBehaviour
             {
                 delay = 0;
             }
-            yield return new WaitForSeconds(delay);                
+            yield return new WaitForSeconds(delay);
         }
     }
     public void ChangeFootstepSFX(string surface)
@@ -256,11 +258,11 @@ public class Player : MonoBehaviour
             {
                 Debug.Log("interact");
                 //food
-                if(interactHit.collider.gameObject.tag == "Food")
+                if (interactHit.collider.gameObject.tag == "Food")
                 {
                     Apple apple = null;
                     interactHit.collider.TryGetComponent<Apple>(out apple);
-                    if(apple != null) apple.Collected();
+                    if (apple != null) apple.Collected();
                 }
                 //collectibles
                 else if (interactHit.collider.gameObject.tag == "Collectibles")
@@ -314,7 +316,7 @@ public class Player : MonoBehaviour
     }
     public void GetCaught()
     {
-        if(companionChild != null)
+        if (companionChild != null)
         {
             companionChild.GetEaten();
             companionChild = null;
@@ -331,7 +333,7 @@ public class Player : MonoBehaviour
     }
     public void CallForChildren()
     {
-        foreach(NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
+        foreach (NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
         {
             child.CallOut();
         }
@@ -344,18 +346,18 @@ public class Player : MonoBehaviour
     public void AddHunger(float value)
     {
         hunger += value;
-        if(hunger > 100f)
+        if (hunger > 100f)
         {
             hunger = 100f;
         }
-        else if(hunger < 0f)
+        else if (hunger < 0f)
         {
             hunger = 0f;
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Win")
+        if (other.gameObject.tag == "Win")
         {
             gm.Win();
         }
