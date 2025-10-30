@@ -108,7 +108,7 @@ public class Player : MonoBehaviour
 
         //raycast for interactable object
         Ray rayInteractable = new Ray(cam.transform.position, cam.transform.forward);
-        canInteract = Physics.Raycast(rayInteractable, out interactHit, 3.5f, interactableLayer);
+        canInteract = isHiding ? true : Physics.Raycast(rayInteractable, out interactHit, 3.5f, interactableLayer);
         cursorGrab.SetActive(canInteract);
 
         //hunger depleting
@@ -171,7 +171,7 @@ public class Player : MonoBehaviour
     }
     public void Moving(CallbackContext ctx)
     {
-        if (gameObject.name == "Player")
+        if (gameObject.name == "Player" && !isHiding)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
     }
     public void Sprint(CallbackContext ctx)
     {
-        if (gameObject.name == "Player")
+        if (gameObject.name == "Player" && !isHiding)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -202,7 +202,7 @@ public class Player : MonoBehaviour
     }
     public void Jump(CallbackContext ctx)
     {
-        if (gameObject.name == "Player")
+        if (gameObject.name == "Player" && !isHiding)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -292,23 +292,37 @@ public class Player : MonoBehaviour
                     }
                     else
                     {
-                        isHiding = !isHiding;
-                        CapsuleCollider collider = GetComponent<CapsuleCollider>();
-                        collider.enabled = !isHiding;
-                        if(isHiding)
-                        {
-                            rb.useGravity = false;
-                            lastPosition = transform;
-                            transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z);
-                        }
-                        else
-                        {
-                            rb.useGravity = true;
-                            transform.position = lastPosition.position;
-                        }
+                        Hide();
                     }
                 }
+                else if(isHiding)
+                {
+                    Hide();
+                }
             }
+        }
+    }
+    void Hide()
+    {
+        isHiding = !isHiding;
+        if (isHiding)
+        {
+            lastPosition = transform;
+            interactHit.collider.transform.GetChild(0).gameObject.SetActive(true);
+            interactHit.collider.transform.GetChild(1).gameObject.SetActive(false);
+            transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z);
+            rb.useGravity = false;
+            CapsuleCollider collider = GetComponent<CapsuleCollider>();
+            collider.enabled = !isHiding;
+        }
+        else
+        {
+            transform.position = lastPosition.position;
+            interactHit.collider.transform.GetChild(0).gameObject.SetActive(false);
+            interactHit.collider.transform.GetChild(1).gameObject.SetActive(true);
+            rb.useGravity = true;
+            CapsuleCollider collider = GetComponent<CapsuleCollider>();
+            collider.enabled = !isHiding;
         }
     }
     public void CycleInventory(CallbackContext ctx)
