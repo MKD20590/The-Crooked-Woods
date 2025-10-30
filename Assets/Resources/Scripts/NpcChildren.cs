@@ -7,7 +7,6 @@ public class NpcChildren : NpcMovements
     public int childrenIdx = 0;
     [SerializeField] private AudioSource scream;
     [SerializeField] private float minDistance = 3f;
-    Transform lastPosition;
     CapsuleCollider collider;
 
     Player player;
@@ -49,14 +48,13 @@ public class NpcChildren : NpcMovements
             collider.enabled = true;
             hidingSpot.transform.GetChild(0).gameObject.SetActive(false);
             hidingSpot.transform.GetChild(1).gameObject.SetActive(true);
-            transform.position = lastPosition.position;
+            transform.position = new Vector3(hidingSpot.transform.forward.x, transform.position.y, hidingSpot.transform.forward.z);
         }
         else
         {
             collider.enabled = false;
             hidingSpot.transform.GetChild(0).gameObject.SetActive(true);
             hidingSpot.transform.GetChild(1).gameObject.SetActive(false);
-            lastPosition = transform;
             transform.position = new Vector3(hidingSpot.position.x, transform.position.y, hidingSpot.position.z);
         }
     }

@@ -693,7 +693,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 46092287}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2186,7 +2186,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 224302130}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -6604,24 +6604,52 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1092229826}
     - target: {fileID: 1040905116778618364, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: minDistance
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 1040905116778618364, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
       propertyPath: navMeshSurface
       value: 
       objectReference: {fileID: 1633454572}
+    - target: {fileID: 1040905116778618364, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: minDistanceCaught
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1134754468869931520, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
       propertyPath: m_Name
       value: monster
       objectReference: {fileID: 0}
+    - target: {fileID: 1134754468869931520, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1374977888731596914, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5743069
+      objectReference: {fileID: 0}
+    - target: {fileID: 1374977888731596914, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.81864005
+      objectReference: {fileID: 0}
+    - target: {fileID: 2877364857435232679, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.3084497
+      objectReference: {fileID: 0}
+    - target: {fileID: 2877364857435232679, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.9512407
+      objectReference: {fileID: 0}
     - target: {fileID: 4964494857030606290, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4964494857030606290, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4964494857030606290, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4964494857030606290, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6662,6 +6690,10 @@ PrefabInstance:
     - target: {fileID: 4964494857030606290, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4964494857030606290, guid: b97dbec6fde779947aa453f4ad8b70e3, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7498,7 +7530,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 821800749}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -9745,7 +9777,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1021728638}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -10534,8 +10566,9 @@ MonoBehaviour:
   - {fileID: 1737239387}
   currentMonster: {fileID: 746596387}
   minHunger: 50
-  minSpawnInterval: 5
-  maxSpawnInterval: 10
+  minSpawnInterval: 10
+  maxSpawnInterval: 15
+  monsterSpawned: 0
 --- !u!4 &1092229827
 Transform:
   m_ObjectHideFlags: 0
@@ -11856,7 +11889,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1232951839}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -12153,7 +12186,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272882988}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -13312,6 +13345,7 @@ MonoBehaviour:
   - {fileID: 875955787}
   - {fileID: 429763794}
   - {fileID: 1737239387}
+  hand: {fileID: 835375653}
   helicopter: {fileID: 919132149203292121}
   cursorGrab: {fileID: 227154381}
   maxChildren: 5
@@ -15845,7 +15879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1633454572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17502,7 +17536,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906791883}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -19279,7 +19313,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2358030152325395944}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 78623a3d5914f49408f4e8971b53cdc4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

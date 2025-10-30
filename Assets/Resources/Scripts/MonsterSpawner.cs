@@ -11,17 +11,20 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] private float minHunger = 20f;
     [SerializeField] private float minSpawnInterval = 5f;
     [SerializeField] private float maxSpawnInterval = 20f;
+    public bool monsterSpawned = false;
+    GameManager gm;
     Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         player = FindFirstObjectByType<Player>();
+        gm = FindFirstObjectByType<GameManager>();
     }
     private void FixedUpdate()
     {
-        if (player.GetHunger() < minHunger && !currentMonster.isSpawned)
+        if (player.GetHunger() < minHunger && !monsterSpawned && !gm.isMonsterEating)
         {
-            currentMonster.isSpawned = true;
+            monsterSpawned = true;
             StartCoroutine(Spawn());
         }
     }
@@ -32,6 +35,7 @@ public class MonsterSpawner : MonoBehaviour
         monsterSpawn.Play();
         int randPos = Random.Range(0, spawnPositions.Count);
         currentMonster.transform.position = spawnPositions[randPos].position;
+        currentMonster.Spawned();
         currentMonster.gameObject.SetActive(true);
     }
 }

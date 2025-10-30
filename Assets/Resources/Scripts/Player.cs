@@ -9,7 +9,7 @@ using static UnityEngine.InputSystem.InputAction;
 public class Player : MonoBehaviour
 {
     [SerializeField] private List<Transform> teleportPositions;
-    Transform lastPosition;
+    [SerializeField] private GameObject hand;
 
     [SerializeField] private GameObject helicopter;
     [SerializeField] private GameObject cursorGrab;
@@ -66,6 +66,7 @@ public class Player : MonoBehaviour
     float camAmplitudeGain;
     float camFrequencyGain;
     public bool isHiding = false;
+    bool canHide = true;
 
     [SerializeField] private Animator anim;
     GameManager gm;
@@ -131,7 +132,7 @@ public class Player : MonoBehaviour
             stamina += Time.deltaTime * 5f;
         }
         currentSpeed = isSprinting && hunger > 0 && stamina > 0 ? sprintSpeed : normalSpeed;
-        if (!gm.isWin && !isHiding)
+        if (!gm.isWin && !gm.isMonsterEating && !isHiding)
         {
             if (isJumped && isGrounded)
             {
@@ -151,12 +152,19 @@ public class Player : MonoBehaviour
             {
                 rb.linearVelocity = new Vector3(movement.x * currentSpeed, rb.linearVelocity.y, movement.z * currentSpeed);
             }
-            CameraEffects();
         }
+        else if(isHiding || gm.isMonsterEating)
+        {
+            StopAllCoroutines();
+            rb.linearVelocity = Vector3.zero;
+            direction = Vector3.zero;
+            isSprinting = false;
+        }
+        CameraEffects();
     }
     void CameraEffects()
     {
-        if (direction != Vector2.zero && isGrounded)
+        if (direction != Vector2.zero && isGrounded && !isHiding)
         {
             camAmplitudeGain = isSprinting ? 1.5f : 1f;
             camFrequencyGain = isSprinting ? 0.2f : 0.1f;
@@ -209,6 +217,10 @@ public class Player : MonoBehaviour
                 isJumped = ctx.ReadValueAsButton();
             }
         }
+    }
+    void ResetHide()
+    {
+        canHide = true;
     }
     IEnumerator FootstepSFX()
     {
@@ -304,25 +316,34 @@ public class Player : MonoBehaviour
     }
     void Hide()
     {
-        isHiding = !isHiding;
-        if (isHiding)
-        {
-            lastPosition = transform;
-            interactHit.collider.transform.GetChild(0).gameObject.SetActive(true);
-            interactHit.collider.transform.GetChild(1).gameObject.SetActive(false);
-            transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z);
-            rb.useGravity = false;
-            CapsuleCollider collider = GetComponent<CapsuleCollider>();
-            collider.enabled = !isHiding;
-        }
-        else
-        {
-            transform.position = lastPosition.position;
-            interactHit.collider.transform.GetChild(0).gameObject.SetActive(false);
-            interactHit.collider.transform.GetChild(1).gameObject.SetActive(true);
-            rb.useGravity = true;
-            CapsuleCollider collider = GetComponent<CapsuleCollider>();
-            collider.enabled = !isHiding;
+        if (canHide)
+        {            
+            isHiding = !isHiding;
+            canHide = false;
+            hand.SetActive(!isHiding);
+            if (isHiding)
+            {
+                interactHit.collider.GetComponent<CapsuleCollider>().enabled = false;
+                interactHit.collider.transform.GetChild(0).gameObject.SetActive(true);
+                interactHit.collider.transform.GetChild(1).gameObject.SetActive(false);
+                transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z);
+                rb.useGravity = false;
+                CapsuleCollider collider = GetComponent<CapsuleCollider>();
+                collider.enabled = !isHiding;
+            }
+            else
+            {
+                interactHit.collider.transform.GetChild(0).gameObject.SetActive(false);
+                interactHit.collider.transform.GetChild(1).gameObject.SetActive(true);
+                //transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z-2f);
+                Vector3 outPosition = interactHit.collider.transform.forward * 2f;
+                transform.position = new Vector3(interactHit.collider.transform.position.x + outPosition.x, transform.position.y, interactHit.collider.transform.position.z + outPosition.z);
+                rb.useGravity = true;
+                CapsuleCollider collider = GetComponent<CapsuleCollider>();
+                collider.enabled = !isHiding;
+                interactHit.collider.GetComponent<CapsuleCollider>().enabled = true;
+            }
+            Invoke("ResetHide", 1f);
         }
     }
     public void CycleInventory(CallbackContext ctx)
@@ -381,12 +402,12 @@ public class Player : MonoBehaviour
             }
             if(children.Count <= 0)
             {
-                StartCoroutine(gm.MonsterGetPlayer());
+                gm.MonsterGetPlayer();
                 transform.position = teleportPositions[Random.Range(0, teleportPositions.Count)].position;
             }
             else
             {
-                StartCoroutine(gm.MonsterEats());
+                gm.MonsterEats();
                 int randomIdx = Random.Range(0, rescuedChildren.Count);
                 rescuedChildren[randomIdx].GetEaten();
                 rescuedChildren.RemoveAt(randomIdx);

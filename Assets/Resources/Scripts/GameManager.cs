@@ -59,33 +59,48 @@ public class GameManager : MonoBehaviour
             mixer.SetFloat("sfx", Mathf.Log10(sfxSlider.value) * 20);
         }
     }
-    public IEnumerator MonsterEats()
+    IEnumerator MonsterEatsScreen()
     {
-        isMonsterEating = true;
         jumpscareScreen.SetBool("in", true);
-        yield return new WaitForSecondsRealtime(3f);
+        yield return new WaitForSeconds(3f);
         jumpscareScreen.SetBool("in", false);
         isMonsterEating = false;
     }
-    public IEnumerator MonsterGetPlayer()
+    public void MonsterEats()
+    {
+        isMonsterEating = true;
+        Time.timeScale = 1;
+        StartCoroutine(MonsterEatsScreen());
+    }
+    public void MonsterGetPlayer()
+    {
+        isMonsterEating = true;
+        Time.timeScale = 1;
+        StartCoroutine(MonsterGetPlayerScreen());
+    }
+    IEnumerator MonsterGetPlayerScreen()
     {
         blackScreen.SetBool("in", true);
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSeconds(1f);
         blackScreen.SetBool("in", false);
+        isMonsterEating = false;
     }
     public void PauseGame()
     {
-        isPaused = !isPaused;
-        pausePanel.SetActive(isPaused);
-        if (isPaused)
+        if(!isMonsterEating)
         {
-            Time.timeScale = 0f;
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Time.timeScale = 1f;
-            Cursor.lockState = CursorLockMode.Locked;
+            isPaused = !isPaused;
+            pausePanel.SetActive(isPaused);
+            if (isPaused)
+            {
+                Time.timeScale = 0f;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
     }
     public void Win()

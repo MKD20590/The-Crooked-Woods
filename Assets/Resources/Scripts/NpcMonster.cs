@@ -4,24 +4,21 @@ using UnityEngine.AI;
 
 public class NpcMonster : NpcMovements
 {
-    public MonsterSpawner spawner;
-    float minDistanceCaught = 0.2f;
+    [SerializeField] private MonsterSpawner spawner;
+    [SerializeField] private float minDistanceCaught = 0.2f;
     [SerializeField] private float minDistance = 30f;
     [SerializeField] private float minDuration = 10f;
     [SerializeField] private float maxDuration = 15f;
     [SerializeField] private float duration = 0f;
-    GameManager gm;
     public bool isSpawned = false;
     Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gm = FindFirstObjectByType<GameManager>();
         player = FindFirstObjectByType<Player>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshSurface = FindFirstObjectByType<NavMeshSurface>();
         //UpdateNavMesh();
-        duration = Random.Range(minDuration, maxDuration);
     }
 
     // Update is called once per frame
@@ -29,11 +26,14 @@ public class NpcMonster : NpcMovements
     {
         if (isSpawned)
         {
-            if (Vector3.Distance(transform.position, player.transform.position) <= minDistance && !player.isHiding)
+            if (Vector3.Distance(transform.position, player.transform.position) <= minDistance && 
+                Vector3.Distance(transform.position, player.transform.position) > minDistanceCaught && 
+                !player.isHiding)
             {
                 MoveToTarget();
             }
-            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceCaught && !player.isHiding)
+            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceCaught && 
+                !player.isHiding)
             {
                 player.GetCaught();
                 isSpawned = false;
@@ -49,7 +49,13 @@ public class NpcMonster : NpcMovements
         }
         else
         {
+            spawner.monsterSpawned = false;
             gameObject.SetActive(false);
         }
+    }
+    public void Spawned()
+    {
+        isSpawned = true;
+        duration = Random.Range(minDuration, maxDuration);
     }
 }
