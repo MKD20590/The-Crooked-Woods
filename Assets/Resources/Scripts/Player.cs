@@ -8,6 +8,9 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private List<Transform> teleportPositions;
+    Transform lastPosition;
+
     [SerializeField] private GameObject helicopter;
     [SerializeField] private GameObject cursorGrab;
 
@@ -62,6 +65,7 @@ public class Player : MonoBehaviour
     Camera cam;
     float camAmplitudeGain;
     float camFrequencyGain;
+    public bool isHiding = false;
 
     [SerializeField] private Animator anim;
     GameManager gm;
@@ -127,7 +131,7 @@ public class Player : MonoBehaviour
             stamina += Time.deltaTime * 5f;
         }
         currentSpeed = isSprinting && hunger > 0 && stamina > 0 ? sprintSpeed : normalSpeed;
-        if (!gm.isWin)
+        if (!gm.isWin && !isHiding)
         {
             if (isJumped && isGrounded)
             {
@@ -152,7 +156,7 @@ public class Player : MonoBehaviour
     }
     void CameraEffects()
     {
-        if (direction != Vector2.zero)
+        if (direction != Vector2.zero && isGrounded)
         {
             camAmplitudeGain = isSprinting ? 1.5f : 1f;
             camFrequencyGain = isSprinting ? 0.2f : 0.1f;
@@ -282,6 +286,27 @@ public class Player : MonoBehaviour
                 else if (interactHit.collider.gameObject.tag == "Tent")
                 {
                     //for children hiding mechanic
+                    if (rescuedChildren.Count > 0)
+                    {
+                        rescuedChildren[0].Hiding(interactHit.collider.transform);
+                    }
+                    else
+                    {
+                        isHiding = !isHiding;
+                        CapsuleCollider collider = GetComponent<CapsuleCollider>();
+                        collider.enabled = !isHiding;
+                        if(isHiding)
+                        {
+                            rb.useGravity = false;
+                            lastPosition = transform;
+                            transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z);
+                        }
+                        else
+                        {
+                            rb.useGravity = true;
+                            transform.position = lastPosition.position;
+                        }
+                    }
                 }
             }
         }
@@ -305,7 +330,7 @@ public class Player : MonoBehaviour
             {
                 callVoice.clip = callVoices[Random.Range(0, callVoices.Count)];
                 callVoice.Play();
-                Invoke("CallForChildren", 3.5f);
+                StartCoroutine(CallForChildren());
             }
         }
     }
@@ -328,22 +353,42 @@ public class Player : MonoBehaviour
         {
             companionChild.GetEaten();
             companionChild = null;
+            AddHunger(100f);
         }
         else
         {
-            int randomIdx = Random.Range(0, rescuedChildren.Count);
-            rescuedChildren[randomIdx].GetEaten();
-            rescuedChildren.RemoveAt(randomIdx);
-            journal_childrenDead[randomIdx].SetActive(true);
-            maxChildren--;
+            List<NpcChildren> children = new List<NpcChildren>();
+            foreach (NpcChildren child in rescuedChildren)
+            {
+                if(!child.isHiding)
+                {
+                    children.Add(child);
+                }
+            }
+            if(children.Count <= 0)
+            {
+                StartCoroutine(gm.MonsterGetPlayer());
+                transform.position = teleportPositions[Random.Range(0, teleportPositions.Count)].position;
+            }
+            else
+            {
+                StartCoroutine(gm.MonsterEats());
+                int randomIdx = Random.Range(0, rescuedChildren.Count);
+                rescuedChildren[randomIdx].GetEaten();
+                rescuedChildren.RemoveAt(randomIdx);
+                journal_childrenDead[randomIdx].SetActive(true);
+                maxChildren--;
+                AddHunger(100f);
+            }
         }
-        AddHunger(100f);
     }
-    public void CallForChildren()
+    public IEnumerator CallForChildren()
     {
+        yield return new WaitForSeconds(2f);
         foreach (NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
         {
             if(!rescuedChildren.Contains(child)) child.CallOut();
+            yield return new WaitForSeconds(Random.Range(1f,3f));
         }
         Invoke("ResetCall", 5f);
     }

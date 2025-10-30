@@ -16,12 +16,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
     LoadingManager loadingManager;
+    Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1;
         loadingManager = LoadingManager.Instance;
+        player = FindFirstObjectByType<Player>();
         if (!PlayerPrefs.HasKey("bgm") || !PlayerPrefs.HasKey("sfx"))
         {
             PlayerPrefs.SetFloat("bgm", 1f);
@@ -64,6 +66,12 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(3f);
         jumpscareScreen.SetBool("in", false);
         isMonsterEating = false;
+    }
+    public IEnumerator MonsterGetPlayer()
+    {
+        blackScreen.SetBool("in", true);
+        yield return new WaitForSecondsRealtime(1f);
+        blackScreen.SetBool("in", false);
     }
     public void PauseGame()
     {

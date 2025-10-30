@@ -7,13 +7,16 @@ public class NpcChildren : NpcMovements
     public int childrenIdx = 0;
     [SerializeField] private AudioSource scream;
     [SerializeField] private float minDistance = 3f;
+    Transform lastPosition;
+    CapsuleCollider collider;
 
     Player player;
     bool isLost = true;
-    bool isHiding = false;
+    public bool isHiding = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        collider = GetComponent<CapsuleCollider>();
         player = FindFirstObjectByType<Player>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshSurface = FindFirstObjectByType<NavMeshSurface>();
@@ -43,11 +46,18 @@ public class NpcChildren : NpcMovements
         isHiding = !isHiding;
         if(!isHiding)
         {
-            SetTarget(player.transform);
+            collider.enabled = true;
+            hidingSpot.transform.GetChild(0).gameObject.SetActive(false);
+            hidingSpot.transform.GetChild(1).gameObject.SetActive(true);
+            transform.position = lastPosition.position;
         }
         else
         {
-            SetTarget(hidingSpot);
+            collider.enabled = false;
+            hidingSpot.transform.GetChild(0).gameObject.SetActive(true);
+            hidingSpot.transform.GetChild(1).gameObject.SetActive(false);
+            lastPosition = transform;
+            transform.position = new Vector3(hidingSpot.position.x, transform.position.y, hidingSpot.position.z);
         }
     }
     void SetTarget(Transform target)

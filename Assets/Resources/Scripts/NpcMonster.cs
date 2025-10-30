@@ -29,13 +29,12 @@ public class NpcMonster : NpcMovements
     {
         if (isSpawned)
         {
-            if (Vector3.Distance(transform.position, player.transform.position) <= minDistance)
+            if (Vector3.Distance(transform.position, player.transform.position) <= minDistance && !player.isHiding)
             {
                 MoveToTarget();
             }
-            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceCaught)
+            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceCaught && !player.isHiding)
             {
-                gm.MonsterEats();
                 player.GetCaught();
                 isSpawned = false;
             }
@@ -46,8 +45,11 @@ public class NpcMonster : NpcMovements
             else
             {
                 isSpawned = false;
-                gameObject.SetActive(false);
             }
+        }
+        else
+        {
+            gameObject.SetActive(false);
         }
     }
 }

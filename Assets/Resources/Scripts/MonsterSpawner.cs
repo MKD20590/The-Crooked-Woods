@@ -19,7 +19,7 @@ public class MonsterSpawner : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (player.GetHunger() < minHunger && player.rescuedChildren.Count >= 1 && !currentMonster.isSpawned)
+        if (player.GetHunger() < minHunger && !currentMonster.isSpawned)
         {
             currentMonster.isSpawned = true;
             StartCoroutine(Spawn());
@@ -32,18 +32,6 @@ public class MonsterSpawner : MonoBehaviour
         monsterSpawn.Play();
         int randPos = Random.Range(0, spawnPositions.Count);
         currentMonster.transform.position = spawnPositions[randPos].position;
-        currentMonster.isSpawned = true;
         currentMonster.gameObject.SetActive(true);
-        /*        int rand = Random.Range(0, 2);
-                if (rand == 0)
-                {
-                    Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(0f, 2f), Random.Range(-20f, 20f));
-                    currentMonster.transform.position =  (player.transform.position + posisi);
-                }
-                else
-                {
-                    Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(-0f, -2f), Random.Range(-20f, 20f));
-                    currentMonster.transform.position = (player.transform.position - posisi);
-                }*/
     }
 }
