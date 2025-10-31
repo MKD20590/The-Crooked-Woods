@@ -113,7 +113,14 @@ public class Player : MonoBehaviour
         cursorGrab.SetActive(canInteract);
 
         //hunger depleting
-        hunger -= isSprinting ? Time.deltaTime * 1.0f : Time.deltaTime;
+        if(hunger > 0)
+        {
+            hunger -= isSprinting ? Time.deltaTime * 1.0f : Time.deltaTime;
+        }
+        else
+        {
+            hunger = 0;
+        }
 
         //movement
         movement = (cam.transform.forward * direction.y) + (cam.transform.right * direction.x);
@@ -300,7 +307,48 @@ public class Player : MonoBehaviour
                     //for children hiding mechanic
                     if (rescuedChildren.Count > 0)
                     {
-                        rescuedChildren[0].Hiding(interactHit.collider.transform);
+                        //pas tentnya closed & anak lg hiding di dlmnya
+                        if(interactHit.collider.transform.GetChild(0).gameObject.activeSelf)
+                        {
+                            //ambi children yg lg hiding
+                            List<NpcChildren> children = new List<NpcChildren>();
+                            foreach (NpcChildren child in rescuedChildren)
+                            {
+                                if (child.isHiding)
+                                {
+                                    children.Add(child);
+                                }
+                            }
+                            //children yg lg hiding di tentnya
+                            foreach (NpcChildren child in children)
+                            {
+                                if (child.hidingSpot == interactHit.collider.gameObject)
+                                {
+                                    child.Hiding(interactHit.collider.transform);
+                                    return;
+                                }
+                            }
+                        }
+                        //pas tentnya open
+                        else
+                        {
+                            if(companionChild != null && !companionChild.isHiding)
+                            {
+                                companionChild.Hiding(interactHit.collider.transform);
+                            }
+                            else
+                            {
+                                for(int i = 0; i < rescuedChildren.Count; i++)
+                                {
+                                    if (!rescuedChildren[i].isHiding)
+                                    {
+                                        rescuedChildren[i].Hiding(interactHit.collider.transform);
+                                        return;
+                                    }
+                                }
+                                Hide();
+                            }
+                        }
                     }
                     else
                     {
@@ -335,7 +383,6 @@ public class Player : MonoBehaviour
             {
                 interactHit.collider.transform.GetChild(0).gameObject.SetActive(false);
                 interactHit.collider.transform.GetChild(1).gameObject.SetActive(true);
-                //transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z-2f);
                 Vector3 outPosition = interactHit.collider.transform.forward * 2f;
                 transform.position = new Vector3(interactHit.collider.transform.position.x + outPosition.x, transform.position.y, interactHit.collider.transform.position.z + outPosition.z);
                 rb.useGravity = true;
@@ -386,9 +433,11 @@ public class Player : MonoBehaviour
     {
         if (companionChild != null)
         {
+            gm.MonsterEats();
+            AddHunger(100f);
+            rescuedChildren.Remove(companionChild);
             companionChild.GetEaten();
             companionChild = null;
-            AddHunger(100f);
         }
         else
         {
@@ -408,12 +457,12 @@ public class Player : MonoBehaviour
             else
             {
                 gm.MonsterEats();
+                AddHunger(100f);
                 int randomIdx = Random.Range(0, rescuedChildren.Count);
+                journal_childrenDead[rescuedChildren[randomIdx].childrenIdx].SetActive(true);
                 rescuedChildren[randomIdx].GetEaten();
                 rescuedChildren.RemoveAt(randomIdx);
-                journal_childrenDead[randomIdx].SetActive(true);
                 maxChildren--;
-                AddHunger(100f);
             }
         }
     }
@@ -437,10 +486,6 @@ public class Player : MonoBehaviour
         if (hunger > 100f)
         {
             hunger = 100f;
-        }
-        else if (hunger < 0f)
-        {
-            hunger = 0f;
         }
     }
     private void OnTriggerEnter(Collider other)

@@ -5736,6 +5736,7 @@ MonoBehaviour:
   childrenIdx: 4
   scream: {fileID: 1972674364}
   minDistance: 7
+  hidingSpot: {fileID: 0}
   isHiding: 0
 --- !u!4 &642143820
 Transform:
@@ -6204,6 +6205,7 @@ MonoBehaviour:
   childrenIdx: 1
   scream: {fileID: 788013090}
   minDistance: 7
+  hidingSpot: {fileID: 0}
   isHiding: 0
 --- !u!4 &673727684
 Transform:
@@ -7014,7 +7016,7 @@ Transform:
   m_GameObject: {fileID: 769883600}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 141.13, y: 16.14, z: 150.72}
+  m_LocalPosition: {x: 260, y: 16.14, z: 91.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8575,7 +8577,7 @@ Transform:
   m_GameObject: {fileID: 887417923}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 141.13, y: 16.14, z: 150.72}
+  m_LocalPosition: {x: 260, y: 16.14, z: 91.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9565,6 +9567,7 @@ MonoBehaviour:
   childrenIdx: 0
   scream: {fileID: 767203769}
   minDistance: 7
+  hidingSpot: {fileID: 0}
   isHiding: 0
 --- !u!4 &994857968
 Transform:
@@ -10493,7 +10496,7 @@ Transform:
   m_GameObject: {fileID: 1088027804}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 141.13, y: 16.14, z: 150.72}
+  m_LocalPosition: {x: 260, y: 16.14, z: 91.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10716,6 +10719,7 @@ MonoBehaviour:
   childrenIdx: 3
   scream: {fileID: 1435356299}
   minDistance: 7
+  hidingSpot: {fileID: 0}
   isHiding: 0
 --- !u!4 &1102723212
 Transform:
@@ -13007,7 +13011,7 @@ Transform:
   m_GameObject: {fileID: 1363651160}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 141.13, y: 15.14, z: 150.72}
+  m_LocalPosition: {x: 260, y: 15.14, z: 91.1}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -13375,7 +13379,7 @@ MonoBehaviour:
   - {fileID: 1975427914}
   - {fileID: 846257207}
   companionChild: {fileID: 0}
-  hunger: 100
+  hunger: 5
   hungerBar: {fileID: 1187986203}
   stamina: 50
   staminaBar: {fileID: 1323646687}
@@ -13902,7 +13906,7 @@ Transform:
   m_GameObject: {fileID: 1407175098}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 141.13, y: 16.14, z: 150.72}
+  m_LocalPosition: {x: 260, y: 16.14, z: 91.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18251,6 +18255,7 @@ MonoBehaviour:
   childrenIdx: 2
   scream: {fileID: 244329572}
   minDistance: 7
+  hidingSpot: {fileID: 0}
   isHiding: 0
 --- !u!4 &1975465462
 Transform:
@@ -24212,8 +24217,11 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1496710719}
+  - {fileID: 2067817051}
+  - {fileID: 1092229827}
   - {fileID: 746596382}
   - {fileID: 1563856372}
+  - {fileID: 1363651161}
   - {fileID: 994857968}
   - {fileID: 673727684}
   - {fileID: 1975465462}
@@ -24239,7 +24247,6 @@ SceneRoots:
   - {fileID: 166288302}
   - {fileID: 1021903618}
   - {fileID: 831957197}
-  - {fileID: 1363651161}
   - {fileID: 423144185}
   - {fileID: 627160493}
   - {fileID: 887417928}
@@ -24249,8 +24256,6 @@ SceneRoots:
   - {fileID: 947410434}
   - {fileID: 1820375691}
   - {fileID: 1643442086}
-  - {fileID: 2067817051}
-  - {fileID: 1092229827}
   - {fileID: 96970177}
   - {fileID: 50962699}
   - {fileID: 632689378}
