@@ -1,17 +1,19 @@
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class NpcMonster : NpcMovements
 {
+    [SerializeField] private CanvasGroup staticScreen;
     [SerializeField] private MonsterSpawner spawner;
-    [SerializeField] private float minDistanceCaught = 0.2f;
     [SerializeField] private float minDistance = 30f;
     [SerializeField] private float minDuration = 10f;
     [SerializeField] private float maxDuration = 15f;
     [SerializeField] private float duration = 0f;
     public bool isSpawned = false;
     Player player;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,19 +28,23 @@ public class NpcMonster : NpcMovements
     {
         if (isSpawned)
         {
+            // more opaque = nearer
+            staticScreen.alpha = 1 - Mathf.InverseLerp(1, 20, Vector3.Distance(transform.position, player.transform.position));
+
+            // if player is not hiding & is in range = chase the player
             if (Vector3.Distance(transform.position, player.transform.position) <= minDistance && 
-                Vector3.Distance(transform.position, player.transform.position) > minDistanceCaught && 
+                Vector3.Distance(transform.position, player.transform.position) > minDistanceStopping && 
                 !player.isHiding)
             {
                 MoveToTarget();
             }
-            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceCaught && 
+            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceStopping && 
                 !player.isHiding)
             {
                 player.GetCaught();
                 isSpawned = false;
             }
-            if(duration > 0)
+            if(duration > 0 && isSpawned)
             {
                 duration -= Time.deltaTime;
             }
@@ -49,6 +55,7 @@ public class NpcMonster : NpcMovements
         }
         else
         {
+            staticScreen.alpha = 0;
             spawner.monsterSpawned = false;
             gameObject.SetActive(false);
         }
