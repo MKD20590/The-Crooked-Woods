@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private List<AudioClip> callVoices;
     [SerializeField] private AudioSource callVoice;
+    [SerializeField] private AudioSource jumpscareSFX;
     bool canCallChildren = true;
 
     [Range(0f, 1f)]
@@ -433,6 +434,7 @@ public class Player : MonoBehaviour
     {
         if (companionChild != null)
         {
+            jumpscareSFX.Play();
             gm.MonsterEats();
             AddHunger(100f);
             rescuedChildren.Remove(companionChild);
@@ -456,6 +458,7 @@ public class Player : MonoBehaviour
             }
             else
             {
+                jumpscareSFX.Play();
                 gm.MonsterEats();
                 AddHunger(100f);
                 int randomIdx = Random.Range(0, rescuedChildren.Count);
