@@ -16,12 +16,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
     LoadingManager loadingManager;
+    Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1;
         loadingManager = LoadingManager.Instance;
+        player = FindFirstObjectByType<Player>();
         if (!PlayerPrefs.HasKey("bgm") || !PlayerPrefs.HasKey("sfx"))
         {
             PlayerPrefs.SetFloat("bgm", 1f);
@@ -57,27 +59,48 @@ public class GameManager : MonoBehaviour
             mixer.SetFloat("sfx", Mathf.Log10(sfxSlider.value) * 20);
         }
     }
-    public IEnumerator MonsterEats()
+    IEnumerator MonsterEatsScreen()
+    {
+        jumpscareScreen.SetBool("in", true);
+        yield return new WaitForSeconds(3f);
+        jumpscareScreen.SetBool("in", false);
+        isMonsterEating = false;
+    }
+    public void MonsterEats()
     {
         isMonsterEating = true;
-        jumpscareScreen.SetBool("in", true);
-        yield return new WaitForSecondsRealtime(3f);
-        jumpscareScreen.SetBool("in", false);
+        Time.timeScale = 1;
+        StartCoroutine(MonsterEatsScreen());
+    }
+    public void MonsterGetPlayer()
+    {
+        isMonsterEating = true;
+        Time.timeScale = 1;
+        StartCoroutine(MonsterGetPlayerScreen());
+    }
+    IEnumerator MonsterGetPlayerScreen()
+    {
+        blackScreen.SetBool("in", true);
+        yield return new WaitForSeconds(1f);
+        blackScreen.SetBool("in", false);
         isMonsterEating = false;
     }
     public void PauseGame()
     {
-        isPaused = !isPaused;
-        pausePanel.SetActive(isPaused);
-        if (isPaused)
+        if(!isMonsterEating)
         {
-            Time.timeScale = 0f;
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Time.timeScale = 1f;
-            Cursor.lockState = CursorLockMode.Locked;
+            isPaused = !isPaused;
+            pausePanel.SetActive(isPaused);
+            if (isPaused)
+            {
+                Time.timeScale = 0f;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
     }
     public void Win()

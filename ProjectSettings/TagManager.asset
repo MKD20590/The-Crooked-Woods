@@ -8,6 +8,7 @@ TagManager:
   - Compass
   - Collectibles
   - Win
+  - Tent
   layers:
   - Default
   - TransparentFX

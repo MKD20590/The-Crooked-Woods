@@ -1,27 +1,26 @@
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class NpcMonster : NpcMovements
 {
-    public MonsterSpawner spawner;
-    float minDistanceCaught = 0.2f;
+    [SerializeField] private CanvasGroup staticScreen;
+    [SerializeField] private MonsterSpawner spawner;
     [SerializeField] private float minDistance = 30f;
     [SerializeField] private float minDuration = 10f;
     [SerializeField] private float maxDuration = 15f;
     [SerializeField] private float duration = 0f;
-    GameManager gm;
     public bool isSpawned = false;
     Player player;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gm = FindFirstObjectByType<GameManager>();
         player = FindFirstObjectByType<Player>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshSurface = FindFirstObjectByType<NavMeshSurface>();
         //UpdateNavMesh();
-        duration = Random.Range(minDuration, maxDuration);
     }
 
     // Update is called once per frame
@@ -29,25 +28,41 @@ public class NpcMonster : NpcMovements
     {
         if (isSpawned)
         {
-            if (Vector3.Distance(transform.position, player.transform.position) <= minDistance)
+            // more opaque = nearer
+            staticScreen.alpha = 1 - Mathf.InverseLerp(1, 20, Vector3.Distance(transform.position, player.transform.position));
+
+            // if player is not hiding & is in range = chase the player
+            if (Vector3.Distance(transform.position, player.transform.position) <= minDistance && 
+                Vector3.Distance(transform.position, player.transform.position) > minDistanceStopping && 
+                !player.isHiding)
             {
                 MoveToTarget();
             }
-            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceCaught)
+            else if(Vector3.Distance(transform.position, player.transform.position) <= minDistanceStopping && 
+                !player.isHiding)
             {
-                gm.MonsterEats();
                 player.GetCaught();
                 isSpawned = false;
             }
-            if(duration > 0)
+            if(duration > 0 && isSpawned)
             {
                 duration -= Time.deltaTime;
             }
             else
             {
                 isSpawned = false;
-                gameObject.SetActive(false);
             }
         }
+        else
+        {
+            staticScreen.alpha = 0;
+            spawner.monsterSpawned = false;
+            gameObject.SetActive(false);
+        }
+    }
+    public void Spawned()
+    {
+        isSpawned = true;
+        duration = Random.Range(minDuration, maxDuration);
     }
 }

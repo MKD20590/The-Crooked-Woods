@@ -8,6 +8,9 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private List<Transform> teleportPositions;
+    [SerializeField] private GameObject hand;
+
     [SerializeField] private GameObject helicopter;
     [SerializeField] private GameObject cursorGrab;
 
@@ -32,6 +35,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private List<AudioClip> callVoices;
     [SerializeField] private AudioSource callVoice;
+    [SerializeField] private AudioSource jumpscareSFX;
     bool canCallChildren = true;
 
     [Range(0f, 1f)]
@@ -62,6 +66,8 @@ public class Player : MonoBehaviour
     Camera cam;
     float camAmplitudeGain;
     float camFrequencyGain;
+    public bool isHiding = false;
+    bool canHide = true;
 
     [SerializeField] private Animator anim;
     GameManager gm;
@@ -104,11 +110,18 @@ public class Player : MonoBehaviour
 
         //raycast for interactable object
         Ray rayInteractable = new Ray(cam.transform.position, cam.transform.forward);
-        canInteract = Physics.Raycast(rayInteractable, out interactHit, 3.5f, interactableLayer);
+        canInteract = isHiding ? true : Physics.Raycast(rayInteractable, out interactHit, 3.5f, interactableLayer);
         cursorGrab.SetActive(canInteract);
 
         //hunger depleting
-        hunger -= isSprinting ? Time.deltaTime * 1.0f : Time.deltaTime;
+        if(hunger > 0)
+        {
+            hunger -= isSprinting ? Time.deltaTime * 1.0f : Time.deltaTime;
+        }
+        else
+        {
+            hunger = 0;
+        }
 
         //movement
         movement = (cam.transform.forward * direction.y) + (cam.transform.right * direction.x);
@@ -127,7 +140,7 @@ public class Player : MonoBehaviour
             stamina += Time.deltaTime * 5f;
         }
         currentSpeed = isSprinting && hunger > 0 && stamina > 0 ? sprintSpeed : normalSpeed;
-        if (!gm.isWin)
+        if (!gm.isWin && !gm.isMonsterEating && !isHiding)
         {
             if (isJumped && isGrounded)
             {
@@ -147,12 +160,19 @@ public class Player : MonoBehaviour
             {
                 rb.linearVelocity = new Vector3(movement.x * currentSpeed, rb.linearVelocity.y, movement.z * currentSpeed);
             }
-            CameraEffects();
         }
+        else if(isHiding || gm.isMonsterEating)
+        {
+            StopAllCoroutines();
+            rb.linearVelocity = Vector3.zero;
+            direction = Vector3.zero;
+            isSprinting = false;
+        }
+        CameraEffects();
     }
     void CameraEffects()
     {
-        if (direction != Vector2.zero)
+        if (direction != Vector2.zero && isGrounded && !isHiding)
         {
             camAmplitudeGain = isSprinting ? 1.5f : 1f;
             camFrequencyGain = isSprinting ? 0.2f : 0.1f;
@@ -167,7 +187,7 @@ public class Player : MonoBehaviour
     }
     public void Moving(CallbackContext ctx)
     {
-        if (gameObject.name == "Player")
+        if (gameObject.name == "Player" && !isHiding)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -186,7 +206,7 @@ public class Player : MonoBehaviour
     }
     public void Sprint(CallbackContext ctx)
     {
-        if (gameObject.name == "Player")
+        if (gameObject.name == "Player" && !isHiding)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -198,13 +218,17 @@ public class Player : MonoBehaviour
     }
     public void Jump(CallbackContext ctx)
     {
-        if (gameObject.name == "Player")
+        if (gameObject.name == "Player" && !isHiding)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
                 isJumped = ctx.ReadValueAsButton();
             }
         }
+    }
+    void ResetHide()
+    {
+        canHide = true;
     }
     IEnumerator FootstepSFX()
     {
@@ -282,8 +306,92 @@ public class Player : MonoBehaviour
                 else if (interactHit.collider.gameObject.tag == "Tent")
                 {
                     //for children hiding mechanic
+                    if (rescuedChildren.Count > 0)
+                    {
+                        //pas tentnya closed & anak lg hiding di dlmnya
+                        if(interactHit.collider.transform.GetChild(0).gameObject.activeSelf)
+                        {
+                            //ambi children yg lg hiding
+                            List<NpcChildren> children = new List<NpcChildren>();
+                            foreach (NpcChildren child in rescuedChildren)
+                            {
+                                if (child.isHiding)
+                                {
+                                    children.Add(child);
+                                }
+                            }
+                            //children yg lg hiding di tentnya
+                            foreach (NpcChildren child in children)
+                            {
+                                if (child.hidingSpot == interactHit.collider.gameObject)
+                                {
+                                    child.Hiding(interactHit.collider.transform);
+                                    return;
+                                }
+                            }
+                        }
+                        //pas tentnya open
+                        else
+                        {
+                            if(companionChild != null && !companionChild.isHiding)
+                            {
+                                companionChild.Hiding(interactHit.collider.transform);
+                            }
+                            else
+                            {
+                                for(int i = 0; i < rescuedChildren.Count; i++)
+                                {
+                                    if (!rescuedChildren[i].isHiding)
+                                    {
+                                        rescuedChildren[i].Hiding(interactHit.collider.transform);
+                                        return;
+                                    }
+                                }
+                                Hide();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Hide();
+                    }
+                }
+                else if(isHiding)
+                {
+                    Hide();
                 }
             }
+        }
+    }
+    void Hide()
+    {
+        if (canHide)
+        {            
+            isHiding = !isHiding;
+            canHide = false;
+            hand.SetActive(!isHiding);
+            if (isHiding)
+            {
+                interactHit.collider.GetComponent<CapsuleCollider>().enabled = false;
+                interactHit.collider.transform.GetChild(0).gameObject.SetActive(true);
+                interactHit.collider.transform.GetChild(1).gameObject.SetActive(false);
+                transform.position = new Vector3(interactHit.collider.transform.position.x, transform.position.y, interactHit.collider.transform.position.z);
+                rb.useGravity = false;
+                CapsuleCollider collider = GetComponent<CapsuleCollider>();
+                collider.enabled = !isHiding;
+            }
+            else
+            {
+                interactHit.collider.transform.GetChild(0).gameObject.SetActive(false);
+                interactHit.collider.transform.GetChild(1).gameObject.SetActive(true);
+                Vector3 outPosition = interactHit.collider.transform.forward * 2f;
+                transform.position = new Vector3(interactHit.collider.transform.position.x + outPosition.x, transform.position.y, interactHit.collider.transform.position.z + outPosition.z);
+                rb.useGravity = true;
+                CapsuleCollider collider = GetComponent<CapsuleCollider>();
+                collider.enabled = !isHiding;
+                interactHit.collider.GetComponent<CapsuleCollider>().enabled = true;
+            }
+            Invoke("ResetHide", 1f);
         }
     }
     public void CycleInventory(CallbackContext ctx)
@@ -305,7 +413,7 @@ public class Player : MonoBehaviour
             {
                 callVoice.clip = callVoices[Random.Range(0, callVoices.Count)];
                 callVoice.Play();
-                Invoke("CallForChildren", 3.5f);
+                StartCoroutine(CallForChildren());
             }
         }
     }
@@ -326,24 +434,48 @@ public class Player : MonoBehaviour
     {
         if (companionChild != null)
         {
+            jumpscareSFX.Play();
+            gm.MonsterEats();
+            AddHunger(100f);
+            rescuedChildren.Remove(companionChild);
             companionChild.GetEaten();
             companionChild = null;
         }
         else
         {
-            int randomIdx = Random.Range(0, rescuedChildren.Count);
-            rescuedChildren[randomIdx].GetEaten();
-            rescuedChildren.RemoveAt(randomIdx);
-            journal_childrenDead[randomIdx].SetActive(true);
-            maxChildren--;
+            List<NpcChildren> children = new List<NpcChildren>();
+            foreach (NpcChildren child in rescuedChildren)
+            {
+                if(!child.isHiding)
+                {
+                    children.Add(child);
+                }
+            }
+            if(children.Count <= 0)
+            {
+                gm.MonsterGetPlayer();
+                transform.position = teleportPositions[Random.Range(0, teleportPositions.Count)].position;
+            }
+            else
+            {
+                jumpscareSFX.Play();
+                gm.MonsterEats();
+                AddHunger(100f);
+                int randomIdx = Random.Range(0, rescuedChildren.Count);
+                journal_childrenDead[rescuedChildren[randomIdx].childrenIdx].SetActive(true);
+                rescuedChildren[randomIdx].GetEaten();
+                rescuedChildren.RemoveAt(randomIdx);
+                maxChildren--;
+            }
         }
-        AddHunger(100f);
     }
-    public void CallForChildren()
+    public IEnumerator CallForChildren()
     {
+        yield return new WaitForSeconds(2f);
         foreach (NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
         {
             if(!rescuedChildren.Contains(child)) child.CallOut();
+            yield return new WaitForSeconds(Random.Range(1f,3f));
         }
         Invoke("ResetCall", 5f);
     }
@@ -357,10 +489,6 @@ public class Player : MonoBehaviour
         if (hunger > 100f)
         {
             hunger = 100f;
-        }
-        else if (hunger < 0f)
-        {
-            hunger = 0f;
         }
     }
     private void OnTriggerEnter(Collider other)

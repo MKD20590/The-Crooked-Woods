@@ -11,17 +11,20 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField] private float minHunger = 20f;
     [SerializeField] private float minSpawnInterval = 5f;
     [SerializeField] private float maxSpawnInterval = 20f;
+    public bool monsterSpawned = false;
+    GameManager gm;
     Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         player = FindFirstObjectByType<Player>();
+        gm = FindFirstObjectByType<GameManager>();
     }
     private void FixedUpdate()
     {
-        if (player.GetHunger() < minHunger && player.rescuedChildren.Count >= 1 && !currentMonster.isSpawned)
+        if (player.GetHunger() < minHunger && !monsterSpawned && !gm.isMonsterEating)
         {
-            currentMonster.isSpawned = true;
+            monsterSpawned = true;
             StartCoroutine(Spawn());
         }
     }
@@ -32,18 +35,7 @@ public class MonsterSpawner : MonoBehaviour
         monsterSpawn.Play();
         int randPos = Random.Range(0, spawnPositions.Count);
         currentMonster.transform.position = spawnPositions[randPos].position;
-        currentMonster.isSpawned = true;
+        currentMonster.Spawned();
         currentMonster.gameObject.SetActive(true);
-        /*        int rand = Random.Range(0, 2);
-                if (rand == 0)
-                {
-                    Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(0f, 2f), Random.Range(-20f, 20f));
-                    currentMonster.transform.position =  (player.transform.position + posisi);
-                }
-                else
-                {
-                    Vector3 posisi = new Vector3(Random.Range(20f, 30f), Random.Range(-0f, -2f), Random.Range(-20f, 20f));
-                    currentMonster.transform.position = (player.transform.position - posisi);
-                }*/
     }
 }
