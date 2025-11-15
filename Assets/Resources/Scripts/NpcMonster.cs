@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 
 public class NpcMonster : NpcMovements
 {
+    [SerializeField] private AudioSource monsterVoice;
     [SerializeField] private CanvasGroup staticScreen;
     [SerializeField] private MonsterSpawner spawner;
     [SerializeField] private float minDistance = 30f;
@@ -55,13 +57,23 @@ public class NpcMonster : NpcMovements
         }
         else
         {
+            StopAllCoroutines();
             staticScreen.alpha = 0;
             spawner.monsterSpawned = false;
             gameObject.SetActive(false);
         }
     }
+    IEnumerator PlayVoice()
+    {
+        while (isSpawned)
+        {
+            monsterVoice.Play();
+            yield return new WaitForSeconds(Random.Range(5f, 10f));
+        }
+    }
     public void Spawned()
     {
+        StartCoroutine(PlayVoice());
         isSpawned = true;
         duration = Random.Range(minDuration, maxDuration);
     }
