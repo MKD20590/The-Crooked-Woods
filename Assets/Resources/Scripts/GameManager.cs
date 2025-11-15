@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
     }
     public void PauseGame()
     {
-        if(!isMonsterEating)
+        if(!isMonsterEating && !isWin)
         {
             isPaused = !isPaused;
             pausePanel.SetActive(isPaused);
@@ -107,6 +107,7 @@ public class GameManager : MonoBehaviour
     {
         isWin = true;
         Time.timeScale = 0f;
+        pausePanel.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
         blackScreen.SetBool("in", true);
         BackToMenu();

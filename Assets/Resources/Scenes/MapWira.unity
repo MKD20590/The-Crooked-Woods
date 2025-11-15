@@ -1296,7 +1296,7 @@ Transform:
   m_GameObject: {fileID: 134545794}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 125.3, y: 20.550003, z: 119.6}
+  m_LocalPosition: {x: 125.3, y: 14.13, z: 119.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4812,7 +4812,7 @@ Transform:
   m_GameObject: {fileID: 557154725}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 128.9, y: 54.2, z: 140.4}
+  m_LocalPosition: {x: 128.9, y: 14.38, z: 140.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9071,8 +9071,8 @@ GameObject:
   - component: {fileID: 949340703}
   - component: {fileID: 949340705}
   - component: {fileID: 949340704}
-  - component: {fileID: 949340706}
   - component: {fileID: 949340707}
+  - component: {fileID: 949340706}
   m_Layer: 5
   m_Name: Jumpscare
   m_TagString: Untagged
@@ -9410,7 +9410,7 @@ Transform:
   m_GameObject: {fileID: 991953267}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 166.3, y: 20.550003, z: 167.9}
+  m_LocalPosition: {x: 166.3, y: 15.4, z: 167.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13065,7 +13065,7 @@ Transform:
   m_GameObject: {fileID: 1328519869}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 141, y: 20.550003, z: 144}
+  m_LocalPosition: {x: 141, y: 14, z: 144}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19061,7 +19061,7 @@ Transform:
   m_GameObject: {fileID: 2018282385}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 166.1, y: 20.550003, z: 121.7}
+  m_LocalPosition: {x: 166.1, y: 12.6, z: 121.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
