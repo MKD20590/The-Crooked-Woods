@@ -259,6 +259,10 @@ public class Player : MonoBehaviour
                 delay = 0;
             }
             yield return new WaitForSeconds(delay);
+            if(direction == Vector2.zero)
+            {
+                yield break;
+            }
         }
     }
     public void ChangeFootstepSFX(string surface)
@@ -311,17 +315,8 @@ public class Player : MonoBehaviour
                         //pas tentnya closed & anak lg hiding di dlmnya
                         if(interactHit.collider.transform.GetChild(0).gameObject.activeSelf)
                         {
-                            //ambi children yg lg hiding
-                            List<NpcChildren> children = new List<NpcChildren>();
-                            foreach (NpcChildren child in rescuedChildren)
-                            {
-                                if (child.isHiding)
-                                {
-                                    children.Add(child);
-                                }
-                            }
                             //children yg lg hiding di tentnya
-                            foreach (NpcChildren child in children)
+                            foreach (NpcChildren child in rescuedChildren)
                             {
                                 if (child.hidingSpot == interactHit.collider.gameObject)
                                 {
@@ -329,13 +324,16 @@ public class Player : MonoBehaviour
                                     return;
                                 }
                             }
+                            Hide();
                         }
+
                         //pas tentnya open
                         else
                         {
                             if(companionChild != null && !companionChild.isHiding)
                             {
                                 companionChild.Hiding(interactHit.collider.transform);
+                                return;
                             }
                             else
                             {
@@ -366,7 +364,7 @@ public class Player : MonoBehaviour
     void Hide()
     {
         if (canHide)
-        {            
+        {
             isHiding = !isHiding;
             canHide = false;
             hand.SetActive(!isHiding);

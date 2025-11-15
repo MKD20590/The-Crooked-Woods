@@ -109,6 +109,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         blackScreen.SetBool("in", true);
+        BackToMenu();
     }
     public void BackToMenu()
     {

@@ -43,18 +43,21 @@ public class NpcChildren : NpcMovements
     }
     public void Hiding(Transform hidingSpot)
     {
+        Debug.Log("hide");
         this.hidingSpot = hidingSpot.gameObject;
         isHiding = !isHiding;
         if(!isHiding)
         {
-            coll.enabled = true;
             hidingSpot.transform.GetChild(0).gameObject.SetActive(false);
             hidingSpot.transform.GetChild(1).gameObject.SetActive(true);
             Vector3 outPosition = hidingSpot.transform.forward * 2f;
             transform.position = new Vector3(hidingSpot.transform.position.x + outPosition.x, transform.position.y, hidingSpot.transform.position.z + outPosition.z);
+            coll.enabled = true;
+            navMeshAgent.enabled = true;
         }
         else
         {
+            navMeshAgent.enabled = false;
             coll.enabled = false;
             hidingSpot.transform.GetChild(0).gameObject.SetActive(true);
             hidingSpot.transform.GetChild(1).gameObject.SetActive(false);
