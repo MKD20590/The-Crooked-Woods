@@ -13657,7 +13657,7 @@ MonoBehaviour:
   - {fileID: 1975427914}
   - {fileID: 846257207}
   companionChild: {fileID: 0}
-  hunger: 100
+  hunger: 200
   hungerBar: {fileID: 1187986203}
   stamina: 50
   staminaBar: {fileID: 1323646687}
