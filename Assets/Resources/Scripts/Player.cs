@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
@@ -444,7 +445,7 @@ public class Player : MonoBehaviour
             List<NpcChildren> children = new List<NpcChildren>();
             foreach (NpcChildren child in rescuedChildren)
             {
-                if(!child.isHiding)
+                if(child.GetComponent<NavMeshAgent>().enabled)
                 {
                     children.Add(child);
                 }
