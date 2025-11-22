@@ -114,13 +114,13 @@ public class Player : MonoBehaviour
         cursorGrab.SetActive(canInteract);
 
         //hunger depleting
-        if(hunger > 0)
+        if(hunger > 40)
         {
             hunger -= isSprinting ? Time.deltaTime * 1.0f : Time.deltaTime;
         }
         else
         {
-            hunger = 0;
+            hunger = 40;
         }
 
         //movement
