@@ -19,6 +19,7 @@ public class NpcChildren : NpcMovements
         coll = GetComponent<CapsuleCollider>();
         player = FindFirstObjectByType<Player>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.stoppingDistance = minDistanceStopping;
         navMeshSurface = FindFirstObjectByType<NavMeshSurface>();
         SetTarget(player.transform);
         //UpdateNavMesh();

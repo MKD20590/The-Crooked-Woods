@@ -31,7 +31,7 @@ public class NpcMonster : NpcMovements
         if (isSpawned)
         {
             // more opaque = nearer
-            staticScreen.alpha = 1 - Mathf.InverseLerp(1, 20, Vector3.Distance(transform.position, player.transform.position));
+            staticScreen.alpha = 1f - Mathf.InverseLerp(1, 50, Vector3.Distance(transform.position, player.transform.position));
 
             // if player is not hiding & is in range = chase the player
             if (Vector3.Distance(transform.position, player.transform.position) <= minDistance && 
