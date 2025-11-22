@@ -1497,7 +1497,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &166288300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14649,28 +14649,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7655869489638440017, guid: b503870116ce4694592386e4e78bfc07, type: 3}
   m_PrefabInstance: {fileID: 69515393}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1476861442
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132149203292121}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a1edd8a184948e34daaad4422d57f575, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1479504478
 GameObject:
   m_ObjectHideFlags: 0
@@ -19571,10 +19549,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543450653659698531}
-  - component: {fileID: 1476861442}
   - component: {fileID: 919132149203292122}
   m_Layer: 0
-  m_Name: Helicopter_Low poly
+  m_Name: Helicopter_parent
   m_TagString: Win
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
