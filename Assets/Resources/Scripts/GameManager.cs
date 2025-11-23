@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
         pausePanel.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
         blackScreen.SetBool("in", true);
-        BackToMenu();
+        Invoke("BackToMenu", 1f);
     }
     public void BackToMenu()
     {

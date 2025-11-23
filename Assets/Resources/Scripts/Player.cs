@@ -238,6 +238,7 @@ public class Player : MonoBehaviour
             if (isGrounded)
             {
                 //play footstep sound
+                footstepAudioSource.Stop();
                 footstepAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
                 footstepAudioSource.pitch = Random.Range(1f - footstepPitchInterval, 1f + footstepPitchInterval);
                 footstepAudioSource.Play();
@@ -410,6 +411,7 @@ public class Player : MonoBehaviour
         {
             if (ctx.phase == InputActionPhase.Performed && canCallChildren)
             {
+                canCallChildren = false;
                 callVoice.clip = callVoices[Random.Range(0, callVoices.Count)];
                 callVoice.Play();
                 StartCoroutine(CallForChildren());
@@ -445,7 +447,7 @@ public class Player : MonoBehaviour
             List<NpcChildren> children = new List<NpcChildren>();
             foreach (NpcChildren child in rescuedChildren)
             {
-                if(child.GetComponent<NavMeshAgent>().enabled)
+                if(!child.isHiding)
                 {
                     children.Add(child);
                 }
@@ -460,10 +462,10 @@ public class Player : MonoBehaviour
                 jumpscareSFX.Play();
                 gm.MonsterEats();
                 AddHunger(100f);
-                int randomIdx = Random.Range(0, rescuedChildren.Count);
-                journal_childrenDead[rescuedChildren[randomIdx].childrenIdx].SetActive(true);
-                rescuedChildren[randomIdx].GetEaten();
-                rescuedChildren.RemoveAt(randomIdx);
+                int randomIdx = Random.Range(0, children.Count);
+                journal_childrenDead[children[randomIdx].childrenIdx].SetActive(true);
+                children[randomIdx].GetEaten();
+                rescuedChildren.Remove(children[randomIdx]);
                 maxChildren--;
             }
         }
@@ -490,9 +492,9 @@ public class Player : MonoBehaviour
             hunger = 100f;
         }
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Win")
+        if (other.gameObject.tag == "Win" && rescuedChildren.Find(x => x.isHiding) == null)
         {
             gm.Win();
         }
