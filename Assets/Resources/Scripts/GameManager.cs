@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioMixer mixer;
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
+    [SerializeField] private Animator winScreen;
+    [SerializeField] private Sprite ending1;
+    [SerializeField] private Sprite ending2;
+    [SerializeField] private Sprite ending3;
     LoadingManager loadingManager;
     Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -106,11 +110,22 @@ public class GameManager : MonoBehaviour
     public void Win()
     {
         isWin = true;
-        Time.timeScale = 0f;
         pausePanel.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
-        blackScreen.SetBool("in", true);
-        Invoke("BackToMenu", 1f);
+        if(player.GetRescuedChildrenCount() == 5)
+        {
+            winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending1;
+        }
+        else if(player.GetRescuedChildrenCount() < 5 && player.GetRescuedChildrenCount() > 0)
+        {
+            winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending2;
+        }
+        else if(player.GetRescuedChildrenCount() <= 0)
+        {
+            winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending3;
+        }
+        winScreen.SetBool("in", true);
+        Invoke("BackToMenu", 5f);
     }
     public void BackToMenu()
     {

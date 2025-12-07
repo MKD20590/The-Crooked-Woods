@@ -22,7 +22,7 @@ public class MonsterSpawner : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (player.GetHunger() < minHunger && !monsterSpawned && !gm.isMonsterEating)
+        if (player.GetHunger() < minHunger && !monsterSpawned && !gm.isMonsterEating && !gm.isWin)
         {
             monsterSpawned = true;
             StartCoroutine(Spawn());

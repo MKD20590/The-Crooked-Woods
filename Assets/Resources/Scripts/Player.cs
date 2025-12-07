@@ -188,7 +188,7 @@ public class Player : MonoBehaviour
     }
     public void Moving(CallbackContext ctx)
     {
-        if (gameObject.name == "Player" && !isHiding)
+        if (gameObject.name == "Player" && !isHiding && !gm.isWin)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -207,7 +207,7 @@ public class Player : MonoBehaviour
     }
     public void Sprint(CallbackContext ctx)
     {
-        if (gameObject.name == "Player" && !isHiding)
+        if (gameObject.name == "Player" && !isHiding && !gm.isWin)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour
     }
     public void Jump(CallbackContext ctx)
     {
-        if (gameObject.name == "Player" && !isHiding)
+        if (gameObject.name == "Player" && !isHiding && !gm.isWin)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -284,7 +284,7 @@ public class Player : MonoBehaviour
     }
     public void Interact(CallbackContext ctx)
     {
-        if (gameObject.name == "Player")
+        if (gameObject.name == "Player" && !gm.isWin)
         {
             if (ctx.phase == InputActionPhase.Performed && canInteract)
             {
@@ -437,7 +437,7 @@ public class Player : MonoBehaviour
         {
             jumpscareSFX.Play();
             gm.MonsterEats();
-            AddHunger(100f);
+            AddHunger(hungerBar.maxValue);
             rescuedChildren.Remove(companionChild);
             companionChild.GetEaten();
             companionChild = null;
@@ -461,7 +461,7 @@ public class Player : MonoBehaviour
             {
                 jumpscareSFX.Play();
                 gm.MonsterEats();
-                AddHunger(100f);
+                AddHunger(hungerBar.maxValue);
                 int randomIdx = Random.Range(0, children.Count);
                 journal_childrenDead[children[randomIdx].childrenIdx].SetActive(true);
                 children[randomIdx].GetEaten();
@@ -487,14 +487,18 @@ public class Player : MonoBehaviour
     public void AddHunger(float value)
     {
         hunger += value;
-        if (hunger > 100f)
+        if (hunger > hungerBar.maxValue)
         {
-            hunger = 100f;
+            hunger = hungerBar.maxValue;
         }
+    }
+    public int GetRescuedChildrenCount()
+    {
+        return rescuedChildren.Count;
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Win" && rescuedChildren.Find(x => x.isHiding) == null)
+        if (other.gameObject.tag == "Win" && rescuedChildren.Find(x => !x.GetComponent<NavMeshAgent>().enabled) == null)
         {
             gm.Win();
         }
