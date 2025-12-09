@@ -115,14 +115,17 @@ public class GameManager : MonoBehaviour
         if(player.GetRescuedChildrenCount() == 5)
         {
             winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending1;
+            PlayerPrefs.SetInt("ending1", 1);
         }
         else if(player.GetRescuedChildrenCount() < 5 && player.GetRescuedChildrenCount() > 0)
         {
             winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending2;
+            PlayerPrefs.SetInt("ending2", 1);
         }
         else if(player.GetRescuedChildrenCount() <= 0)
         {
             winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending3;
+            PlayerPrefs.SetInt("ending3", 1);
         }
         winScreen.SetBool("in", true);
         Invoke("BackToMenu", 5f);

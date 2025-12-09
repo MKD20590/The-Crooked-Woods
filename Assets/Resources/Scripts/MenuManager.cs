@@ -2,9 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class MenuManager : MonoBehaviour
 {
+    [SerializeField] private GameObject galleryPanel;
+    [SerializeField] private List<GameObject> galleryElements;
     [SerializeField] private GameObject optionPanel;
     [SerializeField] private AudioMixer mixer;
     [SerializeField] private Slider bgmSlider;
@@ -30,6 +33,17 @@ public class MenuManager : MonoBehaviour
             sfxSlider.value = PlayerPrefs.GetFloat("sfx");
             mixer.SetFloat("bgm", PlayerPrefs.GetFloat("bgm"));
             mixer.SetFloat("sfx", PlayerPrefs.GetFloat("sfx"));
+        }
+        foreach (GameObject element in galleryElements)
+        {
+            if (PlayerPrefs.GetInt(element.name, 0) == 1)
+            {
+                element.SetActive(true);
+            }
+            else
+            {
+                element.SetActive(false);
+            }
         }
     }
 
@@ -57,6 +71,18 @@ public class MenuManager : MonoBehaviour
     public void OpenOption()
     {
         optionPanel.SetActive(!optionPanel.activeSelf);
+    }
+    public void OpenGallery()
+    {
+        galleryPanel.SetActive(!galleryPanel.activeSelf);
+    }
+    public void ResetData()
+    {
+        PlayerPrefs.DeleteAll();
+        foreach (GameObject element in galleryElements)
+        {
+            element.SetActive(false);
+        }
     }
     public void Exitgame()
     {

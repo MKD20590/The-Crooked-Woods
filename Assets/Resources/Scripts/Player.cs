@@ -418,10 +418,29 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public IEnumerator CallForChildren()
+    {
+        yield return new WaitForSeconds(2f);
+        foreach (NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
+        {
+            if(!rescuedChildren.Contains(child)) child.CallOut();
+            yield return new WaitForSeconds(Random.Range(1f,3f));
+        }
+        yield return new WaitForSeconds(3f);
+        ResetCall();
+    }
+    void ResetCall()
+    {
+        canCallChildren = true;
+    }
     public void RescueChild(NpcChildren child)
     {
         journal_childrenMaterial[child.childrenIdx].SetTexture("_Texture2D", journal_childrenFound[child.childrenIdx]);
         rescuedChildren.Add(child);
+    }
+    public bool IsAllChildrenRescued()
+    {
+        return rescuedChildren.Count >= maxChildren;
     }
     public void GetCompass()
     {
@@ -469,20 +488,6 @@ public class Player : MonoBehaviour
                 maxChildren--;
             }
         }
-    }
-    public IEnumerator CallForChildren()
-    {
-        yield return new WaitForSeconds(2f);
-        foreach (NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
-        {
-            if(!rescuedChildren.Contains(child)) child.CallOut();
-            yield return new WaitForSeconds(Random.Range(1f,3f));
-        }
-        Invoke("ResetCall", 5f);
-    }
-    void ResetCall()
-    {
-        canCallChildren = true;
     }
     public void AddHunger(float value)
     {

@@ -4,10 +4,10 @@ public class MapTrigger : MonoBehaviour
 {
     [SerializeField] private string areaName;
     MapManager mapManager;
-    bool hasTriggered = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        areaName = gameObject.name;
         mapManager = FindAnyObjectByType<MapManager>();
     }
 
@@ -18,8 +18,10 @@ public class MapTrigger : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (hasTriggered) return;
-        hasTriggered = true;
-        mapManager.OpenArea(areaName);
+        if(other.CompareTag("Player"))
+        {
+            mapManager.OpenArea(areaName);
+            gameObject.SetActive(false);
+        }
     }
 }
