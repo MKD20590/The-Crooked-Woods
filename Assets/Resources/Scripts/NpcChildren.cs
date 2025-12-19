@@ -44,7 +44,7 @@ public class NpcChildren : NpcMovements
     }
     public void Hiding(Transform hidingSpot)
     {
-        Debug.Log("hide");
+        Debug.Log("hidden");
         this.hidingSpot = hidingSpot.gameObject;
         isHiding = !isHiding;
         if(!isHiding)

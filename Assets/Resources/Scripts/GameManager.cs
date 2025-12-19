@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite ending1;
     [SerializeField] private Sprite ending2;
     [SerializeField] private Sprite ending3;
+    [SerializeField] private Sprite endingText1;
+    [SerializeField] private Sprite endingText2;
+    [SerializeField] private Sprite endingText3;
     LoadingManager loadingManager;
     Player player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -112,23 +115,29 @@ public class GameManager : MonoBehaviour
         isWin = true;
         pausePanel.SetActive(false);
         Cursor.lockState = CursorLockMode.None;
+        //ending 1 - anak full
         if(player.GetRescuedChildrenCount() == 5)
         {
             winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending1;
+            winScreen.transform.GetChild(1).GetComponent<Image>().sprite = endingText1;
             PlayerPrefs.SetInt("ending1", 1);
         }
+        //ending 2 - anak sebagian
         else if(player.GetRescuedChildrenCount() < 5 && player.GetRescuedChildrenCount() > 0)
         {
             winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending2;
+            winScreen.transform.GetChild(1).GetComponent<Image>().sprite = endingText2;
             PlayerPrefs.SetInt("ending2", 1);
         }
-        else if(player.GetRescuedChildrenCount() <= 0)
+        //ending 3 - anak none
+        else if (player.GetRescuedChildrenCount() <= 0)
         {
             winScreen.transform.GetChild(0).GetComponent<Image>().sprite = ending3;
+            winScreen.transform.GetChild(1).GetComponent<Image>().sprite = endingText3;
             PlayerPrefs.SetInt("ending3", 1);
         }
         winScreen.SetBool("in", true);
-        Invoke("BackToMenu", 5f);
+        Invoke("BackToMenu", 8f);
     }
     public void BackToMenu()
     {
