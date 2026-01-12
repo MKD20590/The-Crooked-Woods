@@ -41,6 +41,7 @@ public class NpcChildren : NpcMovements
     public void CallOut()
     {
         scream.Play();
+        Debug.LogWarning("call out!");
     }
     public void Hiding(Transform hidingSpot)
     {

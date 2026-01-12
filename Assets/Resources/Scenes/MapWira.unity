@@ -15022,6 +15022,12 @@ MonoBehaviour:
   helicopter: {fileID: 919132149203292121}
   cursorGrab: {fileID: 227154381}
   maxChildren: 5
+  children:
+  - {fileID: 994857967}
+  - {fileID: 673727683}
+  - {fileID: 1975465461}
+  - {fileID: 1102723211}
+  - {fileID: 642143819}
   rescuedChildren: []
   journal_childrenMaterial:
   - {fileID: 2100000, guid: 99742e2acd186f74ba281e03b41fd3b2, type: 2}
@@ -15068,6 +15074,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2b6e3c0004e05d0438fc535763f0f83f, type: 3}
   callVoice: {fileID: 672290935}
   jumpscareSFX: {fileID: 1820375690}
+  canCallChildren: 1
   footstepPitchInterval: 0.3
   footstepInterval_walk: 0.7
   footstepInterval_run: 0.3

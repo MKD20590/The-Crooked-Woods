@@ -48,7 +48,7 @@ public class NpcMonster : NpcMovements
             }
             if(duration > 0 && isSpawned)
             {
-                duration -= Time.deltaTime;
+                duration -= player.isHiding ? Time.deltaTime * 1.5f : Time.deltaTime;
             }
             else
             {

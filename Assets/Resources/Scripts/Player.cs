@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private int maxChildren = 5;
 
+    [SerializeField] private List<NpcChildren> children;
     public List<NpcChildren> rescuedChildren;
     [SerializeField] private List<Material> journal_childrenMaterial;
     [SerializeField] private List<Texture2D> journal_childrenNotFound;
@@ -37,12 +38,13 @@ public class Player : MonoBehaviour
     [SerializeField] private List<AudioClip> callVoices;
     [SerializeField] private AudioSource callVoice;
     [SerializeField] private AudioSource jumpscareSFX;
-    bool canCallChildren = true;
+    [SerializeField] private bool canCallChildren = true;
 
     [Range(0f, 1f)]
     [SerializeField] private float footstepPitchInterval;
     [SerializeField] private float footstepInterval_walk = 0.5f;
     [SerializeField] private float footstepInterval_run = 0.2f;
+    Coroutine footstepCoroutine;
     [SerializeField] private CinemachineBasicMultiChannelPerlin cinemachineNoise;
     Rigidbody rb;
     [SerializeField] private Vector3 movement = Vector3.zero;
@@ -164,7 +166,7 @@ public class Player : MonoBehaviour
         }
         else if(isHiding || gm.isMonsterEating)
         {
-            StopAllCoroutines();
+            StopCoroutine(footstepCoroutine);
             rb.linearVelocity = Vector3.zero;
             direction = Vector3.zero;
             isSprinting = false;
@@ -195,12 +197,12 @@ public class Player : MonoBehaviour
                 direction = ctx.ReadValue<Vector2>();
                 if (ctx.phase == InputActionPhase.Performed)
                 {
-                    StopAllCoroutines();
-                    StartCoroutine(FootstepSFX());
+                    StopCoroutine(footstepCoroutine);
+                    footstepCoroutine = StartCoroutine(FootstepSFX());
                 }
                 else
                 {
-                    StopAllCoroutines();
+                    StopCoroutine(footstepCoroutine);
                 }
             }
         }
@@ -213,8 +215,8 @@ public class Player : MonoBehaviour
             {
                 isSprinting = ctx.ReadValueAsButton();
             }
-            StopAllCoroutines();
-            StartCoroutine(FootstepSFX());
+            StopCoroutine(footstepCoroutine);
+            footstepCoroutine = StartCoroutine(FootstepSFX());
         }
     }
     public void Jump(CallbackContext ctx)
@@ -418,19 +420,17 @@ public class Player : MonoBehaviour
             }
         }
     }
-    public IEnumerator CallForChildren()
+    IEnumerator CallForChildren()
     {
-        yield return new WaitForSeconds(2f);
-        foreach (NpcChildren child in FindObjectsByType<NpcChildren>(FindObjectsSortMode.None))
+        foreach (NpcChildren child in children)
         {
-            if(!rescuedChildren.Contains(child)) child.CallOut();
-            yield return new WaitForSeconds(Random.Range(1f,3f));
+            yield return new WaitForSeconds(Random.Range(1f,2f));
+            if (!rescuedChildren.Contains(child))
+            {
+                child.CallOut();
+            }
+            Debug.Log("calling child " + child.childrenIdx);
         }
-        yield return new WaitForSeconds(3f);
-        ResetCall();
-    }
-    void ResetCall()
-    {
         canCallChildren = true;
     }
     public void RescueChild(NpcChildren child)

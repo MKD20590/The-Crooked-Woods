@@ -32,10 +32,10 @@ public class MonsterSpawner : MonoBehaviour
     public IEnumerator Spawn()
     {
         yield return new WaitForSeconds(Random.Range(minSpawnInterval,maxSpawnInterval));
-        monsterSpawn.Play();
         int randPos = Random.Range(0, spawnPositions.Count);
         currentMonster.transform.position = spawnPositions[randPos].position;
         currentMonster.Spawned();
         currentMonster.gameObject.SetActive(true);
+        monsterSpawn.Play();
     }
 }
