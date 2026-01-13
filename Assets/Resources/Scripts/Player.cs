@@ -150,6 +150,7 @@ public class Player : MonoBehaviour
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
                 //play 1 time footstep sound when jump
                 jumpAudioSource.Stop();
+                jumpAudioSource.pitch = 1f;
                 jumpAudioSource.transform.position = new Vector3(transform.position.x, transform.position.y - 0.7f, transform.position.z);
                 jumpAudioSource.Play();
             }
@@ -190,60 +191,31 @@ public class Player : MonoBehaviour
     }
     public void Moving(CallbackContext ctx)
     {
-        if (!isHiding && !gm.isWin)
+        if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
         {
-            if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
-            {
-                direction = ctx.ReadValue<Vector2>();
-                if (ctx.phase == InputActionPhase.Performed)
-                {
-                    StopCoroutine(footstepCoroutine);
-                    footstepCoroutine = StartCoroutine(FootstepSFX());
-                }
-                else
-                {
-                    StopCoroutine(footstepCoroutine);
-                }
+            direction = !isHiding && !gm.isWin ? ctx.ReadValue<Vector2>() : Vector2.zero;
+            if (ctx.phase == InputActionPhase.Performed)
+            { 
+                footstepCoroutine = StartCoroutine(FootstepSFX());
             }
-        }
-        else
-        {
-            if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
+            else if(ctx.phase == InputActionPhase.Canceled)
             {
-                direction = Vector2.zero;
                 StopCoroutine(footstepCoroutine);
             }
         }
     }
     public void Sprint(CallbackContext ctx)
     {
-        if (!isHiding && !gm.isWin)
+        if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
         {
-            if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
-            {
-                isSprinting = ctx.ReadValueAsButton();
-            }
-            StopCoroutine(footstepCoroutine);
-            footstepCoroutine = StartCoroutine(FootstepSFX());
-        }
-        else
-        {
-            isSprinting = false;
-            StopCoroutine(footstepCoroutine);
+            isSprinting = !isHiding && !gm.isWin ? ctx.ReadValueAsButton() : false;
         }
     }
     public void Jump(CallbackContext ctx)
     {
-        if (!isHiding && !gm.isWin)
+        if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
         {
-            if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
-            {
-                isJumped = ctx.ReadValueAsButton();
-            }
-        }
-        else
-        {
-            isJumped = false;
+            isJumped = !isHiding && !gm.isWin ? ctx.ReadValueAsButton() : false;
         }
     }
     void ResetHide()
@@ -280,10 +252,6 @@ public class Player : MonoBehaviour
                 delay = 0;
             }
             yield return new WaitForSeconds(delay);
-            if(direction == Vector2.zero)
-            {
-                yield break;
-            }
         }
     }
     public void ChangeFootstepSFX(string surface)
@@ -398,6 +366,9 @@ public class Player : MonoBehaviour
                 rb.useGravity = false;
                 CapsuleCollider collider = GetComponent<CapsuleCollider>();
                 collider.enabled = !isHiding;
+                isSprinting = false;
+                direction = Vector2.zero;
+                isJumped = false;
             }
             else
             {

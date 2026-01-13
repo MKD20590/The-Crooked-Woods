@@ -9688,7 +9688,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 36b14e1e4be66a141ae543cd158f6053, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -15077,7 +15077,7 @@ MonoBehaviour:
   canCallChildren: 1
   footstepPitchInterval: 0.3
   footstepInterval_walk: 0.7
-  footstepInterval_run: 0.3
+  footstepInterval_run: 0.4
   cinemachineNoise: {fileID: 1088027806}
   movement: {x: 0, y: 0, z: 0}
   direction: {x: 0, y: 0}
