@@ -15,6 +15,7 @@ public class NpcMonster : NpcMovements
     [SerializeField] private float duration = 0f;
     public bool isSpawned = false;
     Player player;
+    GameManager gm;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,6 +23,7 @@ public class NpcMonster : NpcMovements
         player = FindFirstObjectByType<Player>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshSurface = FindFirstObjectByType<NavMeshSurface>();
+        gm = FindFirstObjectByType<GameManager>();
         //UpdateNavMesh();
     }
 
@@ -46,11 +48,11 @@ public class NpcMonster : NpcMovements
                 player.GetCaught();
                 isSpawned = false;
             }
-            if(duration > 0 && isSpawned)
+            if(duration > 0 && isSpawned && !gm.isWin)
             {
                 duration -= player.isHiding ? Time.deltaTime * 1.5f : Time.deltaTime;
             }
-            else
+            else if(duration <= 0 || gm.isWin)
             {
                 isSpawned = false;
             }

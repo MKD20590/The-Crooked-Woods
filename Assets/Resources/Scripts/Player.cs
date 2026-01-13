@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
     }
     public void Moving(CallbackContext ctx)
     {
-        if (gameObject.name == "Player" && !isHiding && !gm.isWin)
+        if (!isHiding && !gm.isWin)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -206,10 +206,18 @@ public class Player : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
+            {
+                direction = Vector2.zero;
+                StopCoroutine(footstepCoroutine);
+            }
+        }
     }
     public void Sprint(CallbackContext ctx)
     {
-        if (gameObject.name == "Player" && !isHiding && !gm.isWin)
+        if (!isHiding && !gm.isWin)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
@@ -218,15 +226,24 @@ public class Player : MonoBehaviour
             StopCoroutine(footstepCoroutine);
             footstepCoroutine = StartCoroutine(FootstepSFX());
         }
+        else
+        {
+            isSprinting = false;
+            StopCoroutine(footstepCoroutine);
+        }
     }
     public void Jump(CallbackContext ctx)
     {
-        if (gameObject.name == "Player" && !isHiding && !gm.isWin)
+        if (!isHiding && !gm.isWin)
         {
             if (ctx.phase == InputActionPhase.Performed || ctx.phase == InputActionPhase.Canceled)
             {
                 isJumped = ctx.ReadValueAsButton();
             }
+        }
+        else
+        {
+            isJumped = false;
         }
     }
     void ResetHide()

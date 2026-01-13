@@ -6166,9 +6166,9 @@ MonoBehaviour:
   ending1: {fileID: 21300000, guid: 1b67bf16744694d449ad6e819cd96794, type: 3}
   ending2: {fileID: 21300000, guid: df1b65633d84cc04483f5658b72664c8, type: 3}
   ending3: {fileID: 21300000, guid: 41eb118bf7f400a4d973d685e86dfca1, type: 3}
-  endingText1: {fileID: 21300000, guid: 4efc4266f16cd3d4695de62ae4c84322, type: 3}
-  endingText2: {fileID: 21300000, guid: acf08c7ba0d958d499697e184c3851bd, type: 3}
-  endingText3: {fileID: 21300000, guid: 6f118ad68dd13d34ca1ce6512bff56b1, type: 3}
+  endingText1: {fileID: 21300000, guid: 0d2b8a8853bb3aa4d9ad09d2e4891e05, type: 3}
+  endingText2: {fileID: 21300000, guid: 85e9086242e2a8d46bc8c8b1a5dcc6ee, type: 3}
+  endingText3: {fileID: 21300000, guid: 4bd647e18c670314a8c3aab98cb85abe, type: 3}
 --- !u!4 &632689378
 Transform:
   m_ObjectHideFlags: 0
@@ -17753,7 +17753,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4efc4266f16cd3d4695de62ae4c84322, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0d2b8a8853bb3aa4d9ad09d2e4891e05, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
